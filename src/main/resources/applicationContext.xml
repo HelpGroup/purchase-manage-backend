@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd"
+       default-lazy-init="true">
+
+    <!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
+    <context:component-scan base-package="com.jiurui.purchase">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <!-- 业务服务层日志拦截 -->
+    <!--<bean id="serviceLogAspect"-->
+          <!--class="com.jiurui.purchase.service.commom.ServiceLogAspect" />-->
+    <!--<aop:config expose-proxy="true">-->
+        <!--<aop:aspect id="serviceLogAspect_AOP" ref="serviceLogAspect"-->
+                    <!--order="1">-->
+            <!--<aop:pointcut id="serviceLogPointcut"-->
+                          <!--expression="execution(* com.jiurui.purchase.service.impl.*.*(..))" />-->
+            <!--<aop:before pointcut-ref="serviceLogPointcut" method="doBefore"  />-->
+            <!--<aop:after pointcut-ref="serviceLogPointcut" method="doAfter" />-->
+            <!--<aop:around pointcut-ref="serviceLogPointcut" method="doAround" />-->
+            <!--<aop:after-throwing pointcut-ref="serviceLogPointcut"-->
+                                <!--method="doThrowing" throwing="ex" />-->
+        <!--</aop:aspect>-->
+    <!--</aop:config>-->
+
+</beans>
