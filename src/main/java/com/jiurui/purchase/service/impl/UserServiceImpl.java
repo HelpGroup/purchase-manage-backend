@@ -42,4 +42,12 @@ public class UserServiceImpl implements UserService {
     public int deleteUser(long id) {
         return userDao.deleteUserById(id);
     }
+
+    @Override
+    public int changePassword(long id, String password) {
+        User user = new User();
+        user.setId(id);
+        user.setPassword(password);
+        return userDao.updateById(user);
+    }
 }

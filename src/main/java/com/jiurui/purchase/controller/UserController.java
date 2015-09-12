@@ -4,6 +4,7 @@ import com.jiurui.purchase.model.ItemJsonResult;
 import com.jiurui.purchase.model.JsonResult;
 import com.jiurui.purchase.model.User;
 import com.jiurui.purchase.request.CreateUserRequest;
+import com.jiurui.purchase.request.PasswordRequest;
 import com.jiurui.purchase.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -73,6 +75,25 @@ public class UserController {
         } else {
             response.setHeader("USER_FIND_ERROR", "user not exist");
             response.sendError(404);
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
+    @ResponseBody
+    public JsonResult changePassword(@RequestBody PasswordRequest password, Errors errors,
+                                     @PathVariable long id, HttpServletResponse response) throws Exception{
+        if (errors.hasErrors()) {
+            response.addHeader("ERROR_MESSAGE", "parameter null");
+            response.sendError(400, "require parameter missing");
+            return JsonResult.ParameterError();
+        }
+        int result = userService.changePassword(id, password.getPassword());
+        if(result == 1) {
+            return JsonResult.Success();
+        } else {
+            response.setHeader("USER_FIND_ERROR", "user not exist");
+            response.sendError(404, "user not exist");
             return null;
         }
     }

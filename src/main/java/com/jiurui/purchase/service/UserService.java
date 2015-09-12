@@ -18,4 +18,6 @@ public interface UserService {
     List<User> findAll();
 
     int deleteUser(long id);
+
+    int changePassword(long id, String password);
 }

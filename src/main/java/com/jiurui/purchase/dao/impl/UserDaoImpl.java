@@ -59,4 +59,9 @@ public class UserDaoImpl implements UserDao {
     public int deleteUserById(long id) {
         return id==1?1:0;
     }
+
+    @Override
+    public int updateById(User user) {
+        return user.getId().equals(1L)?1:0;
+    }
 }
