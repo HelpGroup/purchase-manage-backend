@@ -54,4 +54,9 @@ public class UserDaoImpl implements UserDao {
         list.add(user2);
         return list;
     }
+
+    @Override
+    public int deleteUserById(long id) {
+        return id==1?1:0;
+    }
 }

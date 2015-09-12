@@ -63,4 +63,17 @@ public class UserController {
             return new ItemJsonResult<>(user);
         }
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public JsonResult delete(@PathVariable long id, HttpServletResponse response) throws Exception{
+        int result = userService.deleteUser(id);
+        if(result == 1) {
+            return JsonResult.Success();
+        } else {
+            response.setHeader("USER_FIND_ERROR", "user not exist");
+            response.sendError(404);
+            return null;
+        }
+    }
 }

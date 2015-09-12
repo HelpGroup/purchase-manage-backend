@@ -16,4 +16,6 @@ public interface UserService {
     int createUser(CreateUserRequest request);
 
     List<User> findAll();
+
+    int deleteUser(long id);
 }
