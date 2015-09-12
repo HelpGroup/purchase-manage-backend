@@ -18,8 +18,6 @@ public class LoginUser implements Serializable {
 
     private Long userId;
 
-    private String account;
-
     private String name;
 
     private boolean isAdmin;
@@ -32,19 +30,10 @@ public class LoginUser implements Serializable {
         RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
         if (requestAttributes != null) {
             HttpServletRequest httpServletRequest = ((ServletRequestAttributes) requestAttributes).getRequest();
-            LoginUser userPrincipal = (LoginUser) httpServletRequest.getSession().getAttribute(LoginUser.PRINCIPAL_ATTRIBUTE_NAME);
-            return userPrincipal;
+            return (LoginUser) httpServletRequest.getSession().getAttribute(LoginUser.PRINCIPAL_ATTRIBUTE_NAME);
         }
 
         return null;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
     }
 
     public Long getUserId() {
