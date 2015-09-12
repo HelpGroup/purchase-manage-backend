@@ -37,7 +37,9 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult submit( @Valid @RequestBody LoginRequest loginParam, Errors errors, HttpSession session) {
+    public JsonResult submit( @Valid @RequestBody LoginRequest loginParam, Errors errors,
+                              HttpSession session, HttpServletResponse response)
+                                throws Exception{
         if (errors.hasErrors()) {
             return JsonResult.ParameterError();
         }
@@ -46,6 +48,8 @@ public class LoginController {
         User user = userService.selectUserByUsername(loginParam.getUsername());
 
         if (user == null || !StringUtils.equals(loginParam.getPassword(), user.getPassword())) {
+            response.addHeader("loginStatus", "password error");
+            response.sendError(401);
             return new JsonResult(USERNAME_OR_PASSWORD_ERROR);
         }
 
