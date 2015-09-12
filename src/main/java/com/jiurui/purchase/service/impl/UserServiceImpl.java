@@ -1,7 +1,10 @@
 package com.jiurui.purchase.service.impl;
 
+import com.jiurui.purchase.dao.UserDao;
 import com.jiurui.purchase.model.User;
+import com.jiurui.purchase.request.CreateUserRequest;
 import com.jiurui.purchase.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,18 +12,17 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserDao userDao;
+
     @Override
     public User selectUserByUsername(String name) {
-        User user = new User();
-        user.setId(1L);
-        user.setPassword("123456");
-        user.setRole(1);
-        user.setUsername("lsy");
-        return name.equals("lsy")?user:null;
+        return userDao.selectByUsername(name);
     }
 
     @Override
-    public int createUser(String username, String password) {
-        return 1;
+    public int createUser(CreateUserRequest request) {
+        return userDao.createUser(request.getUsername(), request.getPassword());
     }
 }

@@ -41,6 +41,8 @@ public class LoginController {
                               HttpSession session, HttpServletResponse response)
                                 throws Exception{
         if (errors.hasErrors()) {
+            response.addHeader("loginStatus", "parameter error");
+            response.sendError(400);
             return JsonResult.ParameterError();
         }
 
