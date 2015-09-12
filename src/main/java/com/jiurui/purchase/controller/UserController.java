@@ -12,7 +12,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult create(@RequestBody CreateUserRequest request, Errors errors, HttpServletResponse response) throws Exception {
+    public JsonResult create(@Valid @RequestBody CreateUserRequest request, Errors errors, HttpServletResponse response) throws Exception {
         if (errors.hasErrors()) {
             response.addHeader("USER_CREATE_ERROR", "parameter error");
             response.sendError(400);
@@ -81,7 +81,7 @@ public class UserController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     @ResponseBody
-    public JsonResult changePassword(@RequestBody PasswordRequest password, Errors errors,
+    public JsonResult changePassword(@Valid @RequestBody PasswordRequest password, Errors errors,
                                      @PathVariable long id, HttpServletResponse response) throws Exception{
         if (errors.hasErrors()) {
             response.addHeader("ERROR_MESSAGE", "parameter null");
