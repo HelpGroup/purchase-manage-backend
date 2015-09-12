@@ -30,6 +30,13 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+
         <!--spring -->
         <dependency>
             <groupId>org.springframework</groupId>
