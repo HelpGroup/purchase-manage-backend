@@ -16,6 +16,11 @@ public class UserServiceImpl implements UserService {
         user.setPassword("123456");
         user.setRole(1);
         user.setUsername("lsy");
-        return user;
+        return name.equals("lsy")?user:null;
+    }
+
+    @Override
+    public int createUser(String username, String password) {
+        return 1;
     }
 }

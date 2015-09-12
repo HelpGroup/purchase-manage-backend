@@ -7,4 +7,5 @@ import com.jiurui.purchase.model.User;
  */
 public interface UserService {
     User selectUserByUsername(String name);
+    int createUser(String username, String password);
 }
