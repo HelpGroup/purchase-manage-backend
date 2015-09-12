@@ -7,6 +7,8 @@ import com.jiurui.purchase.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by mark on 15/9/12.
  */
@@ -29,5 +31,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public int createUser(CreateUserRequest request) {
         return userDao.createUser(request.getUsername(), request.getPassword());
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userDao.findAll();
     }
 }

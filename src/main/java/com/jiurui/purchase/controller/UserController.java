@@ -11,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by mark on 15/9/12.
@@ -40,6 +41,13 @@ public class UserController {
         int result = userService.createUser(request);
         if(result==1) return JsonResult.Success();
         else return JsonResult.Fail();
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public ItemJsonResult<List<User>> find(){
+        List<User> list = userService.findAll();
+        return new ItemJsonResult<>(list);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
