@@ -23,4 +23,14 @@ public class UserDaoImpl implements UserDao {
     public int createUser(String username, String password) {
         return 1;
     }
+
+    @Override
+    public User selectById(long id) {
+        User user = new User();
+        user.setId(1L);
+        user.setPassword("123456");
+        user.setRole(1);
+        user.setUsername("lsy");
+        return id==1?user:null;
+    }
 }

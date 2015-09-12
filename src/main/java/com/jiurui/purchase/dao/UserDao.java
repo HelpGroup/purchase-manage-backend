@@ -7,5 +7,8 @@ import com.jiurui.purchase.model.User;
  */
 public interface UserDao {
     User selectByUsername(String name);
+
     int createUser(String username, String password);
+
+    User selectById(long id);
 }

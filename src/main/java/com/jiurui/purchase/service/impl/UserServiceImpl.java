@@ -22,6 +22,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User selectUserById(long id) {
+        return userDao.selectById(id);
+    }
+
+    @Override
     public int createUser(CreateUserRequest request) {
         return userDao.createUser(request.getUsername(), request.getPassword());
     }

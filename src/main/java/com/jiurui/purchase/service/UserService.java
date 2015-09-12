@@ -8,5 +8,6 @@ import com.jiurui.purchase.request.CreateUserRequest;
  */
 public interface UserService {
     User selectUserByUsername(String name);
+    User selectUserById(long id);
     int createUser(CreateUserRequest request);
 }
