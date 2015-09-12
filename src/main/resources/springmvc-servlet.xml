@@ -8,10 +8,6 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
        default-lazy-init="false">
 
-    <!-- 配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理，3.04新增功能 -->
-    <mvc:default-servlet-handler/>
-    <mvc:resources location="/static/" mapping="/static/**"/>
-
     <!-- 把标记了@Controller注解的类转换为bean -->
     <context:component-scan base-package="com.jiurui.purchase.controller;com.jiurui.purchase.utils"
                             use-default-filters="false">
@@ -27,15 +23,18 @@
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <constructor-arg value="UTF-8"/>
             </bean>
+            <!-- 将Jackson2HttpMessageConverter的默认格式化输出设为true -->
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="prettyPrint" value="true"/>
+            </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
 
     <mvc:interceptors>
         <mvc:interceptor>
-            <!--<mvc:mapping path="/basis/**"/>-->
-            <mvc:mapping path="/index.jspx"/>
+            <mvc:mapping path="/data/**"/>
             <bean id="loginUserInterceptor" class="com.jiurui.purchase.security.LoginUserInterceptor">
-                <property name="loginUrl" value="/login.html"/>
+                <property name="loginUrl" value="/static/login.html"/>
             </bean>
         </mvc:interceptor>
     </mvc:interceptors>
