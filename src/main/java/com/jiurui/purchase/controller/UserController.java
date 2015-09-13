@@ -20,13 +20,13 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/user")
+@ResponseBody
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
     public JsonResult create(@Valid @RequestBody CreateUserRequest request, Errors errors, HttpServletResponse response) throws Exception {
         if (errors.hasErrors()) {
             response.addHeader("USER_CREATE_ERROR", "parameter error");
@@ -46,14 +46,12 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
     public ItemJsonResult<List<User>> find(){
         List<User> list = userService.findAll();
         return new ItemJsonResult<>(list);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseBody
     public ItemJsonResult<User> find(@PathVariable long id, HttpServletResponse response) throws Exception{
         User user = userService.selectUserById(id);
         if(user == null) {
@@ -67,7 +65,6 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
     public JsonResult delete(@PathVariable long id, HttpServletResponse response) throws Exception{
         int result = userService.deleteUser(id);
         if(result == 1) {
@@ -80,7 +77,6 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
-    @ResponseBody
     public JsonResult changePassword(@Valid @RequestBody PasswordRequest password, Errors errors,
                                      @PathVariable long id, HttpServletResponse response) throws Exception{
         if (errors.hasErrors()) {
