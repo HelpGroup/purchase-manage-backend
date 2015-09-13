@@ -1,6 +1,7 @@
 package com.jiurui.purchase.dao;
 
 import com.jiurui.purchase.model.Category;
+import com.jiurui.purchase.request.CategoryRequest;
 
 import java.util.List;
 
@@ -9,4 +10,8 @@ import java.util.List;
  */
 public interface CategoryDao {
     List<Category> findAll();
+
+    int update(long id, CategoryRequest request);
+
+    Category selectCategoryById(long id);
 }

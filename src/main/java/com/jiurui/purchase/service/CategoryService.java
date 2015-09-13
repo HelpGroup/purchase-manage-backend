@@ -1,6 +1,7 @@
 package com.jiurui.purchase.service;
 
 import com.jiurui.purchase.model.Category;
+import com.jiurui.purchase.request.CategoryRequest;
 
 import java.util.List;
 
@@ -10,4 +11,8 @@ import java.util.List;
 public interface CategoryService {
 
     List<Category> findAll();
+
+    int update(long id, CategoryRequest request);
+
+    Category selectOne(long id);
 }
