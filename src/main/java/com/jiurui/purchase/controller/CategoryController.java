@@ -1,8 +1,8 @@
 package com.jiurui.purchase.controller;
 
 import com.jiurui.purchase.model.Category;
-import com.jiurui.purchase.model.ItemJsonResult;
-import com.jiurui.purchase.model.JsonResult;
+import com.jiurui.purchase.response.ItemJsonResult;
+import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.request.CategoryRequest;
 import com.jiurui.purchase.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;

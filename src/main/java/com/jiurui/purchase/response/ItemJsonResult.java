@@ -1,4 +1,4 @@
-package com.jiurui.purchase.model;
+package com.jiurui.purchase.response;
 
 public class ItemJsonResult<T> extends JsonResult {
 

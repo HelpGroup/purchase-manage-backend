@@ -1,7 +1,7 @@
 package com.jiurui.purchase.controller;
 
-import com.jiurui.purchase.model.ItemJsonResult;
-import com.jiurui.purchase.model.JsonResult;
+import com.jiurui.purchase.response.ItemJsonResult;
+import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.model.User;
 import com.jiurui.purchase.request.CreateUserRequest;
 import com.jiurui.purchase.request.PasswordRequest;
