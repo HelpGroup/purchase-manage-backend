@@ -1,10 +1,9 @@
 package com.jiurui.purchase.controller;
 
-import com.jiurui.purchase.model.JsonResult;
-import com.jiurui.purchase.model.Role;
+import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.model.User;
 import com.jiurui.purchase.request.LoginRequest;
-import com.jiurui.purchase.security.LoginUser;
+import com.jiurui.purchase.service.TokenService;
 import com.jiurui.purchase.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 /**
@@ -29,6 +26,8 @@ public class LoginController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 用户名 或者 密码 错误
@@ -38,8 +37,7 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public JsonResult submit( @Valid @RequestBody LoginRequest loginParam, Errors errors,
-                              HttpSession session, HttpServletResponse response)
-                                throws Exception{
+                              HttpServletResponse response) throws Exception{
         if (errors.hasErrors()) {
             response.addHeader("loginStatus", "parameter error");
             response.sendError(400);
@@ -55,12 +53,14 @@ public class LoginController {
             return new JsonResult(USERNAME_OR_PASSWORD_ERROR);
         }
 
-        LoginUser loginUser = new LoginUser();
-        loginUser.setName(user.getUsername());
-        loginUser.setUserId(user.getId());
-        loginUser.setIsAdmin(user.getRole().equals(Role.ADMIN));
-        session.setAttribute(LoginUser.PRINCIPAL_ATTRIBUTE_NAME, loginUser);
-
-        return JsonResult.Success();
+        String token = tokenService.createToken();
+        int r = tokenService.persistence(user.getId(),token);
+        if(r==1) {
+            JsonResult result = JsonResult.Success();
+            result.setToken(token);
+            return result;
+        } else {
+            return JsonResult.Fail();
+        }
     }
 }

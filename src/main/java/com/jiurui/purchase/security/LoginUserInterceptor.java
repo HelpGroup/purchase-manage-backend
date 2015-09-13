@@ -1,30 +1,42 @@
 package com.jiurui.purchase.security;
 
 
-import com.jiurui.purchase.utils.RequestUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.servlet.ModelAndView;
+import com.jiurui.purchase.model.Token;
+import com.jiurui.purchase.model.User;
+import com.jiurui.purchase.service.TokenService;
+import com.jiurui.purchase.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.net.URLEncoder;
 
 /**
  * 用户拦截
  */
 public class LoginUserInterceptor extends HandlerInterceptorAdapter {
 
+    private final String TOKEN_KEY = "token";
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private UserService userService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        HttpSession session = request.getSession();
-        LoginUser principal = (LoginUser) session.getAttribute(LoginUser.PRINCIPAL_ATTRIBUTE_NAME);
-        if (null != principal) {
-            return true;
+        String tokenValue = request.getHeader(TOKEN_KEY);
+        if(tokenValue!=null) {
+            Token token = tokenService.getToken(tokenValue);
+            if(token!=null) {
+                long userId = token.getUserId();
+                User user = userService.selectUserById(userId);
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                return true;
+            }
         }
-
         response.addHeader("loginStatus", "accessDenied");
         response.sendError(403);
         return false;
