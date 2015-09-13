@@ -42,7 +42,11 @@ public class UserController {
         }
         int result = userService.createUser(request);
         if(result==1) return JsonResult.Success();
-        else return JsonResult.Fail();
+        else {
+            JsonResult r = JsonResult.Fail();
+            r.setMessage("创建失败");
+            return r;
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -79,6 +83,11 @@ public class UserController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public JsonResult changePassword(@Valid @RequestBody PasswordRequest password, Errors errors,
                                      @PathVariable long id, HttpServletResponse response) throws Exception{
+        if(userService.selectUserById(id) == null) {
+            response.setHeader("USER_FIND_ERROR", "user not exist");
+            response.sendError(404);
+            return null;
+        }
         if (errors.hasErrors()) {
             response.addHeader("ERROR_MESSAGE", "parameter null");
             response.sendError(400, "require parameter missing");
@@ -88,9 +97,9 @@ public class UserController {
         if(result == 1) {
             return JsonResult.Success();
         } else {
-            response.setHeader("USER_FIND_ERROR", "user not exist");
-            response.sendError(404, "user not exist");
-            return null;
+            JsonResult r = JsonResult.Fail();
+            r.setMessage("修改失败");
+            return r;
         }
     }
 }
