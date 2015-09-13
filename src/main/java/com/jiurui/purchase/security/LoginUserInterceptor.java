@@ -16,16 +16,6 @@ import java.net.URLEncoder;
  */
 public class LoginUserInterceptor extends HandlerInterceptorAdapter {
 
-    /**
-     * URL编码
-     */
-    private String urlEscapingCharset = "UTF-8";
-
-    /**
-     * 登录页面地址
-     */
-    private String loginUrl = "/login";
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -35,38 +25,9 @@ public class LoginUserInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        if (RequestUtils.isAjaxRequest(request)) {
-            response.addHeader("loginStatus", "accessDenied");
-            response.sendError(403);
-            return false;
-        }
-
-        if ("GET".equalsIgnoreCase(request.getMethod())) {
-            String queryString = null != request.getQueryString() ? request.getRequestURI() + "?" + request.getQueryString() : request.getRequestURI();
-            response.sendRedirect(request.getContextPath() + this.loginUrl + "?returnUrl=" + URLEncoder.encode(queryString, this.urlEscapingCharset));
-        } else {
-            response.sendRedirect(request.getContextPath() + this.loginUrl);
-        }
-
+        response.addHeader("loginStatus", "accessDenied");
+        response.sendError(403);
         return false;
     }
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if (modelAndView != null) {
-            String str = modelAndView.getViewName();
-            if (!StringUtils.startsWith(str, "redirect:")) {
-                modelAndView.addObject("member", LoginUser.getCurrUser());
-            }
-        }
-
-    }
-
-    public String getLoginUrl() {
-        return loginUrl;
-    }
-
-    public void setLoginUrl(String loginUrl) {
-        this.loginUrl = loginUrl;
-    }
 }

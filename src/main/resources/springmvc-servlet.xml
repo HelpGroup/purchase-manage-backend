@@ -32,10 +32,9 @@
 
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/data/**"/>
-            <bean id="loginUserInterceptor" class="com.jiurui.purchase.security.LoginUserInterceptor">
-                <property name="loginUrl" value="/static/login.html"/>
-            </bean>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/login"/>
+            <bean id="loginUserInterceptor" class="com.jiurui.purchase.security.LoginUserInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
