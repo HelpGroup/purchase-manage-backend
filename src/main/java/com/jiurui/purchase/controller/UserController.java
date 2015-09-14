@@ -71,13 +71,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public JsonResult delete(@PathVariable long id, HttpServletResponse response, HttpSession session) throws Exception{
-        User current = (User)session.getAttribute("user");
-        if(current.getRoleId().equals(Role.BRANCH)){
-            response.setHeader("USER_DELETE_ERROR", "no permission");
-            response.sendError(403);
-            return null;
-        }
+    public JsonResult delete(@PathVariable long id, HttpServletResponse response) throws Exception{
         int result = userService.deleteUser(id);
         if(result == 1) {
             return JsonResult.Success();
