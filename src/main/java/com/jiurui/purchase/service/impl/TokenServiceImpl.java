@@ -20,7 +20,7 @@ public class TokenServiceImpl implements TokenService {
     private TokenDao dao;
     @Override
     public String createToken() {
-        return "aaa";//RandomStringUtils.randomAlphanumeric(DEFAULT_LENGTH);
+        return RandomStringUtils.randomAlphanumeric(DEFAULT_LENGTH);
     }
 
     @Override
