@@ -73,10 +73,16 @@ public class UserController {
         int result = userService.deleteUser(id);
         if(result == 1) {
             return JsonResult.Success();
-        } else {
+        } else  if(result == 0) {
             response.setHeader("USER_FIND_ERROR", "user not exist");
             response.sendError(404);
             return null;
+        } else if(result == -1){
+            response.setHeader("USER_DELETE_ERROR", "no permission");
+            response.sendError(403);
+            return null;
+        } else {
+            return JsonResult.Fail();
         }
     }
 

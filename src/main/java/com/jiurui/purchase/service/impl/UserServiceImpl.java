@@ -1,6 +1,7 @@
 package com.jiurui.purchase.service.impl;
 
 import com.jiurui.purchase.dao.UserDao;
+import com.jiurui.purchase.model.Role;
 import com.jiurui.purchase.model.User;
 import com.jiurui.purchase.request.CreateUserRequest;
 import com.jiurui.purchase.service.UserService;
@@ -40,6 +41,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int deleteUser(long id) {
+        User user = selectUserById(id);
+        if(user == null) return 0;
+        if(user.getRoleId().equals(Role.ADMIN)) return -1;
         return userDao.deleteUserById(id);
     }
 
