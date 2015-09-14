@@ -60,4 +60,8 @@
         </property>
     </bean>
 
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+
 </beans>
