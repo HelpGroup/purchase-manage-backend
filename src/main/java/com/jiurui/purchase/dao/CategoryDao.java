@@ -14,4 +14,10 @@ public interface CategoryDao {
     int update(long id, CategoryRequest request);
 
     Category selectCategoryById(long id);
+
+    int delete(long id);
+
+    Category selectCategoryByName(String name);
+
+    int create(CategoryRequest request);
 }

@@ -53,4 +53,43 @@ public class CategoryController {
             return r;
         }
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public JsonResult delete(@PathVariable long id, HttpServletResponse response) throws Exception {
+        if (categoryService.selectOne(id) == null) {
+            response.setHeader("CATEGORY_FIND_ERROR", "category not exist");
+            response.sendError(404, "category not exist");
+            return null;
+        }
+        int result = categoryService.delete(id);
+        if(result == 1) {
+            return JsonResult.Success();
+        } else {
+            return JsonResult.Fail();
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public JsonResult create(@Valid @RequestBody CategoryRequest request, Errors errors,
+                             HttpServletResponse response) throws Exception {
+        if (errors.hasErrors()) {
+            response.addHeader("USER_CREATE_ERROR", "parameter error");
+            response.sendError(400);
+            return JsonResult.ParameterError();
+        }
+
+        Category category = categoryService.selectOnerByName(request.getName());
+        if(category != null) {
+            response.setHeader("CATEGORY_CREATE_ERROR", "category exist");
+            response.sendError(422);
+            return null;
+        }
+        int result = categoryService.create(request);
+        if(result==1) return JsonResult.Success();
+        else {
+            JsonResult r = JsonResult.Fail();
+            r.setMessage("创建失败");
+            return r;
+        }
+    }
 }

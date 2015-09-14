@@ -15,4 +15,10 @@ public interface CategoryService {
     int update(long id, CategoryRequest request);
 
     Category selectOne(long id);
+
+    int delete(long id);
+
+    Category selectOnerByName(String name);
+
+    int create(CategoryRequest request);
 }

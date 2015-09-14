@@ -33,4 +33,19 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDao.selectCategoryById(id);
     }
 
+    @Override
+    public int delete(long id) {
+        return categoryDao.delete(id);
+    }
+
+    @Override
+    public Category selectOnerByName(String name) {
+        return categoryDao.selectCategoryByName(name);
+    }
+
+    @Override
+    public int create(CategoryRequest request) {
+        return categoryDao.create(request);
+    }
+
 }

@@ -39,4 +39,22 @@ public class CategoryDaoImpl implements CategoryDao {
         category.setName("蔬菜");
         return id==1?category:null;
     }
+
+    @Override
+    public int delete(long id) {
+        return id==1?1:0;
+    }
+
+    @Override
+    public Category selectCategoryByName(String name) {
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("蔬菜");
+        return name.equals("蔬菜")?category:null;
+    }
+
+    @Override
+    public int create(CategoryRequest request) {
+        return 1;
+    }
 }
