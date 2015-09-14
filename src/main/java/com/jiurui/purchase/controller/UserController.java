@@ -1,5 +1,6 @@
 package com.jiurui.purchase.controller;
 
+import com.jiurui.purchase.model.Role;
 import com.jiurui.purchase.response.ItemJsonResult;
 import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.model.User;
@@ -12,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -69,7 +71,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public JsonResult delete(@PathVariable long id, HttpServletResponse response) throws Exception{
+    public JsonResult delete(@PathVariable long id, HttpServletResponse response, HttpSession session) throws Exception{
+        User current = (User)session.getAttribute("user");
+        if(current.getRoleId().equals(Role.BRANCH)){
+            response.setHeader("USER_DELETE_ERROR", "no permission");
+            response.sendError(403);
+            return null;
+        }
         int result = userService.deleteUser(id);
         if(result == 1) {
             return JsonResult.Success();
