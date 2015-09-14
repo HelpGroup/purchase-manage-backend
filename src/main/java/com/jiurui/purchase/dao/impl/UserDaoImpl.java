@@ -2,67 +2,86 @@ package com.jiurui.purchase.dao.impl;
 
 import com.jiurui.purchase.dao.UserDao;
 import com.jiurui.purchase.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mark on 15/9/12.
  */
 @Repository
 public class UserDaoImpl implements UserDao {
+
+    @Autowired
+    private JdbcTemplate template;
+
     @Override
     public User selectByUsername(String name) {
-        User user = new User();
-        user.setId(1L);
-        user.setPassword("123456");
-        user.setRole(1);
-        user.setUsername("lsy");
-        return name.equals("lsy")?user:null;
+        RowMapper<User> rm = BeanPropertyRowMapper.newInstance(User.class);
+        String sql = "SELECT * FROM user WHERE username = '"+ name +"'";
+        User user = null;
+        try {
+            user = template.queryForObject(sql,rm);
+        } catch (EmptyResultDataAccessException e) {
+            user = null;
+        }
+        return user;
     }
 
     @Override
     public int createUser(String username, String password) {
-        return 1;
+        String sql = "INSERT INTO user(username,password,role_id) VALUES ('"+username+"','"+password+"',2)";
+        return template.update(sql);
     }
 
     @Override
     public User selectById(long id) {
-        User user = new User();
-        user.setId(1L);
-        user.setPassword("123456");
-        user.setRole(1);
-        user.setUsername("lsy");
-        return id==1?user:null;
+        RowMapper<User> rm = BeanPropertyRowMapper.newInstance(User.class);
+        String sql = "SELECT * FROM user WHERE id = "+ id;
+        User user = null;
+        try {
+            user = template.queryForObject(sql,rm);
+        } catch (EmptyResultDataAccessException e) {
+            user = null;
+        }
+        return user;
     }
 
     @Override
     public List<User> findAll() {
-        //TODO 返回列表时将管理员账号放在第一个
-        List<User> list = new ArrayList<>();
-        User user = new User();
-        user.setId(1L);
-        user.setPassword(null);
-        user.setRole(1);
-        user.setUsername("lsy");
-        list.add(user);
-        User user2 = new User();
-        user2.setId(2L);
-        user2.setPassword(null);
-        user2.setRole(1);
-        user2.setUsername("lsy");
-        list.add(user2);
-        return list;
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM user ORDER BY role_id ASC";
+        List<Map<String, Object>> list = template.queryForList(sql);
+        for(Map element : list) {
+            User user = new User();
+            user.setId((Long)element.get("id"));
+            user.setUsername((String)element.get("username"));
+            user.setPassword((String)element.get("password"));
+            user.setRoleId((int)element.get("role_id"));
+            users.add(user);
+        }
+        return users;
     }
 
     @Override
     public int deleteUserById(long id) {
-        return id==1?1:0;
+        String sql = "DELETE FROM user WHERE id = "+id;
+        return template.update(sql);
     }
 
     @Override
     public int updateById(User user) {
-        return user.getId().equals(1L)?1:0;
+        long id = user.getId();
+        String password = user.getPassword();
+        String sql = "UPDATE user SET password = '"+password+"' WHERE id = "+id;
+        return template.update(sql);
     }
 }

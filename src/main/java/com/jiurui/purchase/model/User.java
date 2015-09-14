@@ -7,7 +7,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
-    private Integer role;
+    private Integer roleId;
 
     public Long getId() {
         return id;
@@ -33,11 +33,11 @@ public class User {
         this.password = password;
     }
 
-    public Integer getRole() {
-        return role;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setRole(Integer role) {
-        this.role = role;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 }

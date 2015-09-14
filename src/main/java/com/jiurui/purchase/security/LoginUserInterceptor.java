@@ -33,7 +33,7 @@ public class LoginUserInterceptor extends HandlerInterceptorAdapter {
                 user.setId(1L);
                 user.setPassword("123");
                 user.setUsername("Boom");
-                user.setRole(0);
+                user.setRoleId(0);
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
                 return true;
