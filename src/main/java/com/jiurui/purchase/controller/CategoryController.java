@@ -82,7 +82,9 @@ public class CategoryController {
         if(category != null) {
             response.setHeader("CATEGORY_CREATE_ERROR", "category exist");
             response.sendError(422);
-            return null;
+            JsonResult result = JsonResult.Fail();
+            result.setMessage("菜品大类已经存在");
+            return result;
         }
         int result = categoryService.create(request);
         if(result==1) return JsonResult.Success();

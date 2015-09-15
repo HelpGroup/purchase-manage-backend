@@ -33,14 +33,18 @@ public class UserController {
         if (errors.hasErrors()) {
             response.addHeader("USER_CREATE_ERROR", "parameter error");
             response.sendError(400);
-            return JsonResult.ParameterError();
+            JsonResult result = JsonResult.ParameterError();
+            result.setMessage("请求参数有误");
+            return result;
         }
 
         User user = userService.selectUserByUsername(request.getUsername());
         if(user != null) {
             response.setHeader("USER_CREATE_ERROR", "username exist");
             response.sendError(422);
-            return new JsonResult(JsonResult.ERROR);
+            JsonResult result = JsonResult.Fail();
+            result.setMessage("用户名已被使用");
+            return result;
         }
         int result = userService.createUser(request);
         if(result==1) return JsonResult.Success();

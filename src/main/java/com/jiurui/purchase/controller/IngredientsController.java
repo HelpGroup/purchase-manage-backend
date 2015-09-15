@@ -35,8 +35,10 @@ public class IngredientsController {
         Ingredient ingredient = ingredientService.selectOneByName(request.getName());
         if(ingredient != null) {
             response.setHeader("INGREDIENT_CREATE_ERROR", "ingredient exist");
-            response.sendError(409);
-            return null;
+            response.sendError(422);
+            JsonResult result = JsonResult.Fail();
+            result.setMessage("菜品已经存在");
+            return result;
         }
         int result = ingredientService.create(request);
         if(result==1) return JsonResult.Success();
