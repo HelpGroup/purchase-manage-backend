@@ -19,4 +19,6 @@ public interface IngredientDao {
     int update(long id, String name, String unit);
 
     List<Ingredient> findAll();
+
+    List<Ingredient> findAllByCategoryId(long id);
 }

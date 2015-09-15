@@ -22,4 +22,6 @@ public interface IngredientService {
     int update(long id, UpdateIngredientRequest request);
 
     List<Ingredient> findAll();
+
+    List<Ingredient> findAllByCategoryId(long id);
 }

@@ -69,4 +69,20 @@ public class IngredientDaoImpl implements IngredientDao {
         }
         return ingredients;
     }
+
+    @Override
+    public List<Ingredient> findAllByCategoryId(long id) {
+        List<Ingredient> ingredients = new ArrayList<>();
+        String sql = "SELECT * FROM ingredient WHERE category_id = "+id+" ORDER BY id ASC";
+        List<Map<String, Object>> list = template.queryForList(sql);
+        for(Map element : list) {
+            Ingredient ingredient = new Ingredient();
+            ingredient.setId((Long)element.get("id"));
+            ingredient.setName((String) element.get("name"));
+            ingredient.setUnit((String) element.get("unit"));
+            ingredient.setCategoryId((Long)element.get("category_id"));
+            ingredients.add(ingredient);
+        }
+        return ingredients;
+    }
 }

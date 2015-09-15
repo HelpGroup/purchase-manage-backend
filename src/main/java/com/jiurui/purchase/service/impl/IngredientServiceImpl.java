@@ -48,4 +48,9 @@ public class IngredientServiceImpl implements IngredientService {
     public List<Ingredient> findAll() {
         return ingredientDao.findAll();
     }
+
+    @Override
+    public List<Ingredient> findAllByCategoryId(long id) {
+        return ingredientDao.findAllByCategoryId(id);
+    }
 }

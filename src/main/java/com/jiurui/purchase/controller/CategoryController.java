@@ -1,10 +1,12 @@
 package com.jiurui.purchase.controller;
 
 import com.jiurui.purchase.model.Category;
+import com.jiurui.purchase.model.Ingredient;
 import com.jiurui.purchase.response.ItemJsonResult;
 import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.request.CategoryRequest;
 import com.jiurui.purchase.service.CategoryService;
+import com.jiurui.purchase.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -24,11 +26,27 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private IngredientService ingredientService;
 
     @RequestMapping(method = RequestMethod.GET)
     public ItemJsonResult<List<Category>> find(){
         List<Category> list = categoryService.findAll();
         return new ItemJsonResult<>(list);
+    }
+
+    @RequestMapping(value = "/{id}/ingredients", method = RequestMethod.GET)
+    public ItemJsonResult<Category> getOne(@PathVariable long id, HttpServletResponse response)
+    throws Exception {
+        Category category = categoryService.selectOne(id);
+        if (category == null) {
+            response.setHeader("CATEGORY_FIND_ERROR", "category not exist");
+            response.sendError(404, "category not exist");
+            return null;
+        }
+        List<Ingredient> list = ingredientService.findAllByCategoryId(id);
+        category.setIngredientList(list);
+        return new ItemJsonResult<>(category);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
