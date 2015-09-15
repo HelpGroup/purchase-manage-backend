@@ -1,5 +1,6 @@
 package com.jiurui.purchase.controller;
 
+import com.jiurui.purchase.response.ItemJsonResult;
 import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.model.User;
 import com.jiurui.purchase.request.LoginRequest;
@@ -36,12 +37,12 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResult submit( @Valid @RequestBody LoginRequest loginParam, Errors errors,
+    public ItemJsonResult<User> submit( @Valid @RequestBody LoginRequest loginParam, Errors errors,
                               HttpServletResponse response) throws Exception{
         if (errors.hasErrors()) {
             response.addHeader("loginStatus", "parameter error");
             response.sendError(400);
-            return JsonResult.ParameterError();
+            return null;
         }
 
         //用户名，密码验证
@@ -50,17 +51,21 @@ public class LoginController {
         if (user == null || !StringUtils.equals(loginParam.getPassword(), user.getPassword())) {
             response.addHeader("loginStatus", "password error");
             response.sendError(401);
-            return new JsonResult(USERNAME_OR_PASSWORD_ERROR);
+            return null;
         }
 
         String token = tokenService.createToken();
         int r = tokenService.persistence(user.getId(),token);
         if(r==1) {
-            JsonResult result = JsonResult.Success();
+            user.setPassword(null);
+            ItemJsonResult<User> result = new ItemJsonResult<>(user);
+            result.setStatus(JsonResult.SUCCESS);
             result.setToken(token);
             return result;
         } else {
-            return JsonResult.Fail();
+            ItemJsonResult<User> result = new ItemJsonResult<>(null);
+            result.setStatus(JsonResult.FAIL);
+            return result;
         }
     }
 }
