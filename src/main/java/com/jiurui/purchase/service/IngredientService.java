@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface IngredientService {
 
-    Ingredient selectOneByName(String name);
+    Ingredient selectOneByName(String name, long categoryId);
 
     int create(IngredientRequest request);
 

@@ -20,8 +20,8 @@ public class IngredientServiceImpl implements IngredientService {
     private IngredientDao ingredientDao;
 
     @Override
-    public Ingredient selectOneByName(String name) {
-        return ingredientDao.selectByName(name);
+    public Ingredient selectOneByName(String name, long categoryId) {
+        return ingredientDao.selectByName(name, categoryId);
     }
 
     @Override

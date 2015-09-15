@@ -8,7 +8,7 @@ import java.util.List;
  * Created by mark on 15/9/15.
  */
 public interface IngredientDao {
-    Ingredient selectByName(String name);
+    Ingredient selectByName(String name, long categoryId);
 
     int create(String name, String unit, Long categoryId);
 
