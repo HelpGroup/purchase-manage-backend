@@ -42,11 +42,6 @@ public class JsonResult implements Serializable {
     protected String message;
 
     /**
-     * 令牌
-     */
-    protected String token;
-
-    /**
      * 结果值
      */
     protected String result;
@@ -115,14 +110,6 @@ public class JsonResult implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getResult() {

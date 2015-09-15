@@ -4,6 +4,7 @@ import com.jiurui.purchase.response.ItemJsonResult;
 import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.model.User;
 import com.jiurui.purchase.request.LoginRequest;
+import com.jiurui.purchase.response.UserLoginResult;
 import com.jiurui.purchase.service.TokenService;
 import com.jiurui.purchase.service.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +38,7 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public ItemJsonResult<User> submit( @Valid @RequestBody LoginRequest loginParam, Errors errors,
+    public ItemJsonResult<UserLoginResult> submit( @Valid @RequestBody LoginRequest loginParam, Errors errors,
                               HttpServletResponse response) throws Exception{
         if (errors.hasErrors()) {
             response.addHeader("loginStatus", "parameter error");
@@ -51,7 +52,7 @@ public class LoginController {
         if (user == null || !StringUtils.equals(loginParam.getPassword(), user.getPassword())) {
             response.addHeader("loginStatus", "password error");
             response.sendError(422);
-            ItemJsonResult<User> result = new ItemJsonResult<>(null);
+            ItemJsonResult<UserLoginResult> result = new ItemJsonResult<>(null);
             result.setStatus(JsonResult.FAIL);
             result.setMessage("username or password error");
             return result;
@@ -60,13 +61,16 @@ public class LoginController {
         String token = tokenService.createToken();
         int r = tokenService.persistence(user.getId(),token);
         if(r==1) {
-            user.setPassword(null);
-            ItemJsonResult<User> result = new ItemJsonResult<>(user);
+            UserLoginResult userLoginResult = new UserLoginResult();
+            userLoginResult.setId(user.getId());
+            userLoginResult.setUsername(user.getUsername());
+            userLoginResult.setRoleId(user.getRoleId());
+            userLoginResult.setToken(token);
+            ItemJsonResult<UserLoginResult> result = new ItemJsonResult<>(userLoginResult);
             result.setStatus(JsonResult.SUCCESS);
-            result.setToken(token);
             return result;
         } else {
-            ItemJsonResult<User> result = new ItemJsonResult<>(null);
+            ItemJsonResult<UserLoginResult> result = new ItemJsonResult<>(null);
             result.setStatus(JsonResult.FAIL);
             return result;
         }
