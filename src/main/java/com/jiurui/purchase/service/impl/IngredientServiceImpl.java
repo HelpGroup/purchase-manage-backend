@@ -25,4 +25,14 @@ public class IngredientServiceImpl implements IngredientService {
     public int create(IngredientRequest request) {
         return ingredientDao.create(request.getName(),request.getUnit(), request.getCategoryId());
     }
+
+    @Override
+    public Object selectOneById(long id) {
+        return ingredientDao.selectById(id);
+    }
+
+    @Override
+    public int delete(long id) {
+        return ingredientDao.delete(id);
+    }
 }

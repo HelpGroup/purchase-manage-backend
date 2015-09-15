@@ -11,4 +11,8 @@ public interface IngredientService {
     Ingredient selectOneByName(String name);
 
     int create(IngredientRequest request);
+
+    Object selectOneById(long id);
+
+    int delete(long id);
 }

@@ -9,4 +9,8 @@ public interface IngredientDao {
     Ingredient selectByName(String name);
 
     int create(String name, String unit, Long categoryId);
+
+    Object selectById(long id);
+
+    int delete(long id);
 }

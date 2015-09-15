@@ -7,10 +7,7 @@ import com.jiurui.purchase.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -46,6 +43,21 @@ public class IngredientsController {
             JsonResult r = JsonResult.Fail();
             r.setMessage("创建失败");
             return r;
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public JsonResult delete(@PathVariable long id, HttpServletResponse response) throws Exception{
+        if (ingredientService.selectOneById(id) == null) {
+            response.setHeader("INGREDIENT_FIND_ERROR", "ingredient not exist");
+            response.sendError(404, "ingredient not exist");
+            return null;
+        }
+        int result = ingredientService.delete(id);
+        if(result == 1) {
+            return JsonResult.Success();
+        } else {
+            return JsonResult.Fail();
         }
     }
 }
