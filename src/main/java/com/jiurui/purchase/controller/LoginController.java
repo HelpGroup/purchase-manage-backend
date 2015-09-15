@@ -50,8 +50,11 @@ public class LoginController {
 
         if (user == null || !StringUtils.equals(loginParam.getPassword(), user.getPassword())) {
             response.addHeader("loginStatus", "password error");
-            response.sendError(401);
-            return null;
+            response.sendError(422);
+            ItemJsonResult<User> result = new ItemJsonResult<>(null);
+            result.setStatus(JsonResult.FAIL);
+            result.setMessage("username or password error");
+            return result;
         }
 
         String token = tokenService.createToken();
