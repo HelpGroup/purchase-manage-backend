@@ -59,7 +59,7 @@ public class CategoryDaoImpl implements CategoryDao {
 
     @Override
     public int delete(long id) {
-        return template.update("DELETE FROM category WHERE id = "+id);
+        return template.update("DELETE FROM category WHERE id = "+id+" CASCADE ");
     }
 
     @Override

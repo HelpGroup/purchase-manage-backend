@@ -73,7 +73,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public int deleteUserById(long id) {
-        String sql = "DELETE FROM user WHERE id = "+id;
+        String sql = "DELETE FROM user WHERE id = "+id+" CASCADE ";
         return template.update(sql);
     }
 
