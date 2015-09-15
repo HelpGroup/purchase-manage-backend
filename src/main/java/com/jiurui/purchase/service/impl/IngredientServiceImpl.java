@@ -3,6 +3,7 @@ package com.jiurui.purchase.service.impl;
 import com.jiurui.purchase.dao.IngredientDao;
 import com.jiurui.purchase.model.Ingredient;
 import com.jiurui.purchase.request.IngredientRequest;
+import com.jiurui.purchase.request.UpdateIngredientRequest;
 import com.jiurui.purchase.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,10 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public int delete(long id) {
         return ingredientDao.delete(id);
+    }
+
+    @Override
+    public int update(long id, UpdateIngredientRequest request) {
+        return ingredientDao.update(id, request.getName(), request.getUnit());
     }
 }

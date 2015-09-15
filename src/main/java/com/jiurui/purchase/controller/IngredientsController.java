@@ -2,6 +2,7 @@ package com.jiurui.purchase.controller;
 
 import com.jiurui.purchase.model.Ingredient;
 import com.jiurui.purchase.request.IngredientRequest;
+import com.jiurui.purchase.request.UpdateIngredientRequest;
 import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,29 @@ public class IngredientsController {
             return JsonResult.Success();
         } else {
             return JsonResult.Fail();
+        }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
+    public JsonResult update(@Valid @RequestBody UpdateIngredientRequest request, Errors errors,
+                             @PathVariable long id, HttpServletResponse response) throws Exception{
+        if (ingredientService.selectOneById(id) == null) {
+            response.setHeader("INGREDIENT_FIND_ERROR", "ingredient not exist");
+            response.sendError(404, "ingredient not exist");
+            return null;
+        }
+        if (errors.hasErrors()) {
+            response.addHeader("ERROR_MESSAGE", "parameter null");
+            response.sendError(400, "require parameter missing");
+            return JsonResult.ParameterError();
+        }
+        int result = ingredientService.update(id,request);
+        if(result == 1) {
+            return JsonResult.Success();
+        } else {
+            JsonResult r = JsonResult.Fail();
+            r.setMessage("修改失败");
+            return r;
         }
     }
 }

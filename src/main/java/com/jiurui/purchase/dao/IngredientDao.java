@@ -13,4 +13,6 @@ public interface IngredientDao {
     Object selectById(long id);
 
     int delete(long id);
+
+    int update(long id, String name, String unit);
 }

@@ -38,4 +38,9 @@ public class IngredientDaoImpl implements IngredientDao {
     public int delete(long id) {
         return 1;
     }
+
+    @Override
+    public int update(long id, String name, String unit) {
+        return 1;
+    }
 }
