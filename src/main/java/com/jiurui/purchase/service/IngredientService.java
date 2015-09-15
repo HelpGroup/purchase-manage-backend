@@ -4,6 +4,8 @@ import com.jiurui.purchase.model.Ingredient;
 import com.jiurui.purchase.request.IngredientRequest;
 import com.jiurui.purchase.request.UpdateIngredientRequest;
 
+import java.util.List;
+
 /**
  * Created by mark on 15/9/15.
  */
@@ -18,4 +20,6 @@ public interface IngredientService {
     int delete(long id);
 
     int update(long id, UpdateIngredientRequest request);
+
+    List<Ingredient> findAll();
 }

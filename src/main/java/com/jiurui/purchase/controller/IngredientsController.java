@@ -3,6 +3,7 @@ package com.jiurui.purchase.controller;
 import com.jiurui.purchase.model.Ingredient;
 import com.jiurui.purchase.request.IngredientRequest;
 import com.jiurui.purchase.request.UpdateIngredientRequest;
+import com.jiurui.purchase.response.ItemJsonResult;
 import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Created by mark on 15/9/15.
@@ -85,5 +87,11 @@ public class IngredientsController {
             r.setMessage("修改失败");
             return r;
         }
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ItemJsonResult<List<Ingredient>> find(){
+        List<Ingredient> list = ingredientService.findAll();
+        return new ItemJsonResult<>(list);
     }
 }

@@ -8,6 +8,8 @@ import com.jiurui.purchase.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by mark on 15/9/15.
  */
@@ -40,5 +42,10 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public int update(long id, UpdateIngredientRequest request) {
         return ingredientDao.update(id, request.getName(), request.getUnit());
+    }
+
+    @Override
+    public List<Ingredient> findAll() {
+        return ingredientDao.findAll();
     }
 }
