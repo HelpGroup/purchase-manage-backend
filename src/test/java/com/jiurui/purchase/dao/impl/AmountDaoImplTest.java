@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -33,7 +34,7 @@ public class AmountDaoImplTest extends BaseTestClass {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String today = sdf.format(date.getTime());
-        int amount = amountDao.getListByIngredientAndUser(4,2,today);
+        int amount = amountDao.getAmountByIngredientAndUser(4, 2, today);
         assertEquals(10,amount);
     }
 
@@ -47,6 +48,17 @@ public class AmountDaoImplTest extends BaseTestClass {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String today = sdf.format(date.getTime());
-        assertEquals(50, amountDao.getListByIngredientAndUser(5,2,today));
+        assertEquals(50, amountDao.getAmountByIngredientAndUser(5, 2, today));
+    }
+
+    @Test
+    public void testGetSum() throws Exception {
+        assertEquals(40,amountDao.getSum(4,"2015-09-17"));
+    }
+
+    @Test
+    public void testAmounts() throws Exception {
+        List<Amount> amounts = amountDao.getAmountsByIngredient(4,"2015-09-17");
+        assertEquals(2,amounts.size());
     }
 }

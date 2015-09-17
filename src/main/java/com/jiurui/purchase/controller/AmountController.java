@@ -3,15 +3,15 @@ package com.jiurui.purchase.controller;
 import com.jiurui.purchase.model.Category;
 import com.jiurui.purchase.model.User;
 import com.jiurui.purchase.request.AmountRequest;
+import com.jiurui.purchase.response.AggregateResponse;
+import com.jiurui.purchase.response.CategoryResponse;
 import com.jiurui.purchase.response.ItemJsonResult;
 import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.service.AmountService;
+import com.jiurui.purchase.service.ClosedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -26,6 +26,8 @@ public class AmountController {
 
     @Autowired
     private AmountService amountService;
+    @Autowired
+    private ClosedService closedService;
 
     @RequestMapping(method = RequestMethod.GET)
     public ItemJsonResult<List<Category>> list(HttpSession session){
@@ -38,10 +40,16 @@ public class AmountController {
     }
 
 
-    public ItemJsonResult<List<Category>> find(String date){
-        ItemJsonResult<List<Category>> result = new ItemJsonResult<>();
-        List<Category> list = amountService.find(date);
-        result.setItem(list);
+    @RequestMapping(value = "/{date}", method = RequestMethod.GET)
+    public ItemJsonResult<AggregateResponse> find(@PathVariable String date){
+        ItemJsonResult<AggregateResponse> result = new ItemJsonResult<>();
+        List<CategoryResponse> list = amountService.find(date);
+        AggregateResponse response = new AggregateResponse();
+        response.setList(list);
+        result.setItem(response);
+        int isClosed = closedService.isClosed(date)+1;
+        result.setStatus(isClosed);
+        if(isClosed>1) result.setMessage("本日已经截单");
         return result;
     }
 

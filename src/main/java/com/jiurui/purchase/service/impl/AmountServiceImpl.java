@@ -5,6 +5,8 @@ import com.jiurui.purchase.model.Amount;
 import com.jiurui.purchase.model.Category;
 import com.jiurui.purchase.model.Ingredient;
 import com.jiurui.purchase.request.AmountRequest;
+import com.jiurui.purchase.response.CategoryResponse;
+import com.jiurui.purchase.response.IngredientResponse;
 import com.jiurui.purchase.service.AmountService;
 import com.jiurui.purchase.service.CategoryService;
 import com.jiurui.purchase.service.IngredientService;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,8 +33,31 @@ public class AmountServiceImpl implements AmountService {
     private IngredientService ingredientService;
 
     @Override
-    public List<Category> find(String date) {
-        return amountDao.find(date);
+    public List<CategoryResponse> find(String date) {
+        List<Category> categories = categoryService.findAll();
+        List<CategoryResponse> responses = new ArrayList<>();
+        for(Category category : categories){
+            CategoryResponse response = new CategoryResponse();
+            response.setId(category.getId());
+            response.setName(category.getName());
+            List<Ingredient> ingredients = ingredientService.findAllByCategoryId(category.getId());
+            List<IngredientResponse> iResponses = new ArrayList<>();
+            for(Ingredient ingredient : ingredients){
+                IngredientResponse ingredientResponse = new IngredientResponse();
+                ingredientResponse.setId(ingredient.getId());
+                ingredientResponse.setName(ingredient.getName());
+                ingredientResponse.setCategoryId(category.getId());
+                ingredientResponse.setUnit(ingredient.getUnit());
+                int sum = amountDao.getSum(ingredient.getId(), date+" 00:00:00");
+                ingredientResponse.setAmount(sum);
+                List<Amount> amounts = amountDao.getAmountsByIngredient(ingredient.getId(),date);
+                ingredientResponse.setAmounts(amounts);
+                iResponses.add(ingredientResponse);
+            }
+            response.setIngredientList(iResponses);
+            responses.add(response);
+        }
+        return responses;
     }
 
     @Override
@@ -101,7 +127,7 @@ public class AmountServiceImpl implements AmountService {
             List<Ingredient> ingredients = ingredientService.findAllByCategoryId(category.getId());
             if(count > 0){
                 for(Ingredient ingredient : ingredients) {
-                    int amount = amountDao.getListByIngredientAndUser(ingredient.getId(),userId,today);
+                    int amount = amountDao.getAmountByIngredientAndUser(ingredient.getId(), userId, today);
                     ingredient.setAmount(amount);
                 }
             }

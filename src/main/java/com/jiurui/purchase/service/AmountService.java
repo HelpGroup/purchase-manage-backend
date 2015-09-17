@@ -2,6 +2,7 @@ package com.jiurui.purchase.service;
 
 import com.jiurui.purchase.model.Category;
 import com.jiurui.purchase.request.AmountRequest;
+import com.jiurui.purchase.response.CategoryResponse;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public interface AmountService {
 
-    List<Category> find(String date);
+    List<CategoryResponse> find(String date);
 
     int input(AmountRequest request, long UserId);
 
