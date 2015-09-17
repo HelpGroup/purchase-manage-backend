@@ -5,4 +5,6 @@ package com.jiurui.purchase.dao;
  */
 public interface ClosedDao {
     int isClosed(String date);
+
+    int close(String now);
 }

@@ -16,8 +16,13 @@ public class ClosedDaoImpl implements ClosedDao {
     @Override
     public int isClosed(String date) {
         return template.queryForObject(
-                "SELECT count(*) FROM closed WHERE close_time > '"+date+" 00:00:00'",
+                "SELECT count(*) FROM closed WHERE close_time BETWEEN '"+date+" 00:00:00' AND '"+date+" 23:59:59'",
                 Integer.class
         );
+    }
+
+    @Override
+    public int close(String now) {
+        return template.update("INSERT INTO closed(close_time) VALUES ('"+now+"')");
     }
 }

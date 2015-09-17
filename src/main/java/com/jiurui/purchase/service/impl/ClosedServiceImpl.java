@@ -5,6 +5,10 @@ import com.jiurui.purchase.service.ClosedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by mark on 15/9/17.
  */
@@ -16,5 +20,20 @@ public class ClosedServiceImpl implements ClosedService {
     @Override
     public int isClosed(String date) {
         return closedDao.isClosed(date);
+    }
+
+    @Override
+    public int close(String date) {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String today = sdf.format(d);
+        try {
+            long dateLong = sdf.parse(date).getTime();
+            long todayLong = sdf.parse(today).getTime();
+            if(todayLong-dateLong != 0) return -1;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return closedDao.close(today+" 12:00:00");
     }
 }

@@ -5,4 +5,6 @@ package com.jiurui.purchase.service;
  */
 public interface ClosedService {
     int isClosed(String date);
+
+    int close(String date);
 }
