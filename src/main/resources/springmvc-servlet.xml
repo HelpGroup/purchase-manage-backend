@@ -42,7 +42,7 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <mvc:exclude-mapping path="/amount**" />
+            <mvc:exclude-mapping path="/amount/branch/**" />
             <mvc:exclude-mapping path="/login"/>
             <mvc:exclude-mapping path="/logout"/>
             <bean id="PermissionInterceptor" class="com.jiurui.purchase.security.PermissionInterceptor"/>

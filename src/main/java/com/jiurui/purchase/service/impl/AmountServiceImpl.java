@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -117,26 +118,38 @@ public class AmountServiceImpl implements AmountService {
     }
 
     @Override
-    public List<Category> list(long userId) {
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String today = sdf.format(date.getTime());
-        int count = amountDao.getTodayCount(today, userId);
+    public List<Category> list(long userId, String date) {
+        boolean isBeforeToday = isBeforeToday(date);
+        int count = amountDao.getTodayCount(date, userId);
         List<Category> categories = categoryService.findAll();
         for(Category category : categories){
             List<Ingredient> ingredients = ingredientService.findAllByCategoryId(category.getId());
             if(count > 0){
                 for(Ingredient ingredient : ingredients) {
-                    int amount = amountDao.getAmountByIngredientAndUser(ingredient.getId(), userId, today);
+                    int amount = amountDao.getAmountByIngredientAndUser(ingredient.getId(), userId, date);
                     ingredient.setAmount(amount);
                 }
             }
             category.setIngredientList(ingredients);
         }
-        if(count == 0){
+        if(count == 0 && !isBeforeToday){
             int r = create(categories, userId);
             if(r!=1) return null;
         }
         return categories;
+    }
+
+    private boolean isBeforeToday(String day) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String today = sdf.format(date);
+        try {
+            long dayLong = sdf.parse(day).getTime();
+            long todayLong = sdf.parse(today).getTime();
+            return todayLong-dayLong>0;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

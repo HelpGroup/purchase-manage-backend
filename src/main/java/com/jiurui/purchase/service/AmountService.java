@@ -15,5 +15,5 @@ public interface AmountService {
 
     int input(AmountRequest request, long UserId);
 
-    List<Category> list(long userId);
+    List<Category> list(long userId, String date);
 }
