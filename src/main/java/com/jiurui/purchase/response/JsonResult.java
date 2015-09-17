@@ -16,11 +16,6 @@ public class JsonResult implements Serializable {
     public static final int FAIL = 0;
 
     /**
-     * 服务端异常
-     */
-    public static final int ERROR = 500;
-
-    /**
      * 参数错误
      */
     public static final int PARAMETERERROR = 400;
@@ -40,18 +35,6 @@ public class JsonResult implements Serializable {
      * 消息
      */
     protected String message;
-
-    /**
-     * 结果值
-     */
-    protected String result;
-
-
-    /**
-     * 结果值集合
-     */
-    protected List resultSet;
-
 
     /**
      * 构造函数
@@ -92,10 +75,6 @@ public class JsonResult implements Serializable {
         return new JsonResult(JsonResult.FAIL);
     }
 
-    public static JsonResult Error() {
-        return new JsonResult(JsonResult.ERROR);
-    }
-
     public int getStatus() {
         return status;
     }
@@ -110,21 +89,5 @@ public class JsonResult implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public List getResultSet() {
-        return resultSet;
-    }
-
-    public void setResultSet(List resultSet) {
-        this.resultSet = resultSet;
     }
 }
