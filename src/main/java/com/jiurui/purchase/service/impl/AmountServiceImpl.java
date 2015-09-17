@@ -1,0 +1,116 @@
+package com.jiurui.purchase.service.impl;
+
+import com.jiurui.purchase.dao.AmountDao;
+import com.jiurui.purchase.model.Amount;
+import com.jiurui.purchase.model.Category;
+import com.jiurui.purchase.model.Ingredient;
+import com.jiurui.purchase.request.AmountRequest;
+import com.jiurui.purchase.service.AmountService;
+import com.jiurui.purchase.service.CategoryService;
+import com.jiurui.purchase.service.IngredientService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by mark on 15/9/16.
+ */
+@Service
+public class AmountServiceImpl implements AmountService {
+
+    @Autowired
+    private AmountDao amountDao;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private IngredientService ingredientService;
+
+    @Override
+    public List<Category> find(String date) {
+        return amountDao.find(date);
+    }
+
+    @Override
+    @Transactional
+    public int input(AmountRequest request, long userId) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String today = sdf.format(date.getTime());
+        int count = amountDao.getTodayCount(today, userId);
+        List<Category> categories = request.getCategories();
+        if(count == 0) {
+            return create(categories, userId);
+        } else if(count > 0){
+            return update(categories, userId);
+        }
+        return 0;
+    }
+
+    public int create(List<Category> categories, long userId){
+        try {
+            for (Category category : categories) {
+                List<Ingredient> ingredients = category.getIngredientList();
+                for (Ingredient ingredient : ingredients) {
+                    Amount amount = new Amount();
+                    amount.setIngredientId(ingredient.getId());
+                    amount.setUserId(userId);
+                    amount.setAmount(ingredient.getAmount());
+                    int result = amountDao.create(amount);
+                    if(result != 1) return result;
+                }
+            }
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int update(List<Category> categories, long userId){
+        try {
+            for (Category category : categories) {
+                List<Ingredient> ingredients = category.getIngredientList();
+                for (Ingredient ingredient : ingredients) {
+                    Amount amount = new Amount();
+                    amount.setIngredientId(ingredient.getId());
+                    amount.setUserId(userId);
+                    amount.setAmount(ingredient.getAmount());
+                    int result = amountDao.update(amount);
+                    if(result != 1) return result;
+                }
+            }
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
+    public List<Category> list(long userId) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String today = sdf.format(date.getTime());
+        int count = amountDao.getTodayCount(today, userId);
+        List<Category> categories = categoryService.findAll();
+        for(Category category : categories){
+            List<Ingredient> ingredients = ingredientService.findAllByCategoryId(category.getId());
+            if(count > 0){
+                for(Ingredient ingredient : ingredients) {
+                    int amount = amountDao.getListByIngredientAndUser(ingredient.getId(),userId,today);
+                    ingredient.setAmount(amount);
+                }
+            }
+            category.setIngredientList(ingredients);
+        }
+        if(count == 0){
+            int r = create(categories, userId);
+            if(r!=1) return null;
+        }
+        return categories;
+    }
+}

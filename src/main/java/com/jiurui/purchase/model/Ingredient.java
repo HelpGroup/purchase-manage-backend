@@ -10,7 +10,7 @@ public class Ingredient {
     private String name;
     private String unit;//单位
     private Long categoryId;
-    private List<Amount> amount;
+    private int amount = 0;
 
     public Long getId() {
         return id;
@@ -44,11 +44,11 @@ public class Ingredient {
         this.categoryId = categoryId;
     }
 
-    public List<Amount> getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(List<Amount> amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 }
