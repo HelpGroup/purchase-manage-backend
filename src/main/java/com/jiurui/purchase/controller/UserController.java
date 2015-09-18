@@ -32,7 +32,7 @@ public class UserController {
     public JsonResult create(@Valid @RequestBody CreateUserRequest request, Errors errors, HttpServletResponse response) throws Exception {
         if (errors.hasErrors()) {
             response.addHeader("USER_CREATE_ERROR", "parameter error");
-            response.sendError(400);
+            response.setStatus(400);
             JsonResult result = JsonResult.ParameterError();
             result.setMessage("请求参数有误");
             return result;
@@ -41,7 +41,7 @@ public class UserController {
         User user = userService.selectUserByUsername(request.getUsername());
         if(user != null) {
             response.setHeader("USER_CREATE_ERROR", "username exist");
-            response.sendError(422);
+            response.setStatus(422);
             JsonResult result = JsonResult.Fail();
             result.setMessage("用户名已被使用");
             return result;
@@ -66,8 +66,11 @@ public class UserController {
         User user = userService.selectUserById(id);
         if(user == null) {
             response.setHeader("USER_FIND_ERROR", "user not exist");
-            response.sendError(404);
-            return null;
+            response.setStatus(404);
+            ItemJsonResult<User> result = new ItemJsonResult<>();
+            result.setStatus(JsonResult.FAIL);
+            result.setMessage("用户不存在");
+            return result;
         } else {
             user.setPassword(null);
             return new ItemJsonResult<>(user);
@@ -81,11 +84,13 @@ public class UserController {
             return JsonResult.Success();
         } else  if(result == 0) {
             response.setHeader("USER_FIND_ERROR", "user not exist");
-            response.sendError(404);
-            return null;
+            response.setStatus(404);
+            JsonResult fail = JsonResult.Fail();
+            fail.setMessage("用户不存在");
+            return fail;
         } else if(result == -1){
             response.setHeader("USER_DELETE_ERROR", "no permission");
-            response.sendError(403);
+            response.setStatus(403);
             return null;
         } else {
             return JsonResult.Fail();
@@ -97,13 +102,17 @@ public class UserController {
                                      @PathVariable long id, HttpServletResponse response) throws Exception{
         if(userService.selectUserById(id) == null) {
             response.setHeader("USER_FIND_ERROR", "user not exist");
-            response.sendError(404);
-            return null;
+            response.setStatus(404);
+            JsonResult fail = JsonResult.Fail();
+            fail.setMessage("用户不存在");
+            return fail;
         }
         if (errors.hasErrors()) {
             response.addHeader("ERROR_MESSAGE", "parameter null");
-            response.sendError(400, "require parameter missing");
-            return JsonResult.ParameterError();
+            response.setStatus(400);
+            JsonResult result = JsonResult.ParameterError();
+            result.setMessage("请求参数有误");
+            return result;
         }
         int result = userService.changePassword(id, password.getPassword());
         if(result == 1) {

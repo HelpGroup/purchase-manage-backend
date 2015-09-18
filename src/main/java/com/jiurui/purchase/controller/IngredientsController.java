@@ -31,13 +31,15 @@ public class IngredientsController {
                              HttpServletResponse response) throws Exception {
         if (errors.hasErrors()) {
             response.addHeader("USER_CREATE_ERROR", "parameter error");
-            response.sendError(400);
-            return JsonResult.ParameterError();
+            response.setStatus(400);
+            JsonResult result = JsonResult.ParameterError();
+            result.setMessage("请求参数缺失");
+            return result;
         }
         Ingredient ingredient = ingredientService.selectOneByName(request.getName(),request.getCategoryId());
         if(ingredient != null) {
             response.setHeader("INGREDIENT_CREATE_ERROR", "ingredient exist");
-            response.sendError(422);
+            response.setStatus(422);
             JsonResult result = JsonResult.Fail();
             result.setMessage("菜品已经存在");
             return result;
@@ -55,8 +57,10 @@ public class IngredientsController {
     public JsonResult delete(@PathVariable long id, HttpServletResponse response) throws Exception{
         if (ingredientService.selectOneById(id) == null) {
             response.setHeader("INGREDIENT_FIND_ERROR", "ingredient not exist");
-            response.sendError(404, "ingredient not exist");
-            return null;
+            response.setStatus(404);
+            JsonResult result = JsonResult.Fail();
+            result.setMessage("菜品不存在");
+            return result;
         }
         int result = ingredientService.delete(id);
         if(result == 1) {
@@ -71,13 +75,17 @@ public class IngredientsController {
                              @PathVariable long id, HttpServletResponse response) throws Exception{
         if (ingredientService.selectOneById(id) == null) {
             response.setHeader("INGREDIENT_FIND_ERROR", "ingredient not exist");
-            response.sendError(404, "ingredient not exist");
-            return null;
+            response.setStatus(404);
+            JsonResult result = JsonResult.Fail();
+            result.setMessage("菜品不存在");
+            return result;
         }
         if (request.getName()==null && request.getUnit()==null) {
             response.addHeader("ERROR_MESSAGE", "parameter null");
-            response.sendError(400, "require parameter missing");
-            return JsonResult.ParameterError();
+            response.setStatus(400);
+            JsonResult result = JsonResult.ParameterError();
+            result.setMessage("请求参数缺失");
+            return result;
         }
         int result = ingredientService.update(id,request);
         if(result == 1) {

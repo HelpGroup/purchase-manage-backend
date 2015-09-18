@@ -53,8 +53,10 @@ public class AmountController {
         User user = (User) session.getAttribute("user");
         if(user.getRoleId() == Role.BRANCH){
             httpServletResponse.addHeader("accessDenied", "NO PERMISSION");
-            httpServletResponse.sendError(403);
-            return null;
+            httpServletResponse.setStatus(403);
+            ItemJsonResult<AggregateResponse> result = new ItemJsonResult<>();
+            result.setStatus(JsonResult.FAIL);
+            return result;
         }
         ItemJsonResult<AggregateResponse> result = new ItemJsonResult<>();
         List<CategoryResponse> list = amountService.find(date);
@@ -76,8 +78,8 @@ public class AmountController {
         int isClosed = closedService.isClosed(today)+1;
         if(isClosed ==2) {
             response.addHeader("accessDenied", "NO PERMISSION");
-            response.sendError(403);
-            return null;
+            response.setStatus(403);
+            return JsonResult.Fail();
         }
         try {
             User user = (User) session.getAttribute("user");

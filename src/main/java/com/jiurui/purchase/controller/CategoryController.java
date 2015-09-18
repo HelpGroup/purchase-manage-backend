@@ -41,8 +41,11 @@ public class CategoryController {
         Category category = categoryService.selectOne(id);
         if (category == null) {
             response.setHeader("CATEGORY_FIND_ERROR", "category not exist");
-            response.sendError(404, "category not exist");
-            return null;
+            response.setStatus(404);
+            ItemJsonResult<Category> result = new ItemJsonResult<>();
+            result.setStatus(JsonResult.FAIL);
+            result.setMessage("菜品大类不存在");
+            return result;
         }
         List<Ingredient> list = ingredientService.findAllByCategoryId(id);
         category.setIngredientList(list);
@@ -54,13 +57,17 @@ public class CategoryController {
                                  @PathVariable long id, HttpServletResponse response) throws Exception{
         if (categoryService.selectOne(id) == null) {
             response.setHeader("CATEGORY_FIND_ERROR", "category not exist");
-            response.sendError(404, "category not exist");
-            return null;
+            response.setStatus(404);
+            JsonResult result = JsonResult.Fail();
+            result.setMessage("菜品大类不存在");
+            return result;
         }
         if (errors.hasErrors()) {
             response.addHeader("ERROR_MESSAGE", "parameter null");
-            response.sendError(400, "require parameter missing");
-            return JsonResult.ParameterError();
+            response.setStatus(400);
+            JsonResult result = JsonResult.ParameterError();
+            result.setMessage("请求参数缺失");
+            return result;
         }
         int result = categoryService.update(id,request);
         if(result == 1) {
@@ -76,8 +83,10 @@ public class CategoryController {
     public JsonResult delete(@PathVariable long id, HttpServletResponse response) throws Exception {
         if (categoryService.selectOne(id) == null) {
             response.setHeader("CATEGORY_FIND_ERROR", "category not exist");
-            response.sendError(404, "category not exist");
-            return null;
+            response.setStatus(404);
+            JsonResult result = JsonResult.Fail();
+            result.setMessage("菜品大类不存在");
+            return result;
         }
         int result = categoryService.delete(id);
         if(result == 1) {
@@ -92,14 +101,16 @@ public class CategoryController {
                              HttpServletResponse response) throws Exception {
         if (errors.hasErrors()) {
             response.addHeader("USER_CREATE_ERROR", "parameter error");
-            response.sendError(400);
-            return JsonResult.ParameterError();
+            response.setStatus(400);
+            JsonResult result = JsonResult.ParameterError();
+            result.setMessage("请求参数缺失");
+            return result;
         }
 
         Category category = categoryService.selectOnerByName(request.getName());
         if(category != null) {
             response.setHeader("CATEGORY_CREATE_ERROR", "category exist");
-            response.sendError(422);
+            response.setStatus(422);
             JsonResult result = JsonResult.Fail();
             result.setMessage("菜品大类已经存在");
             return result;

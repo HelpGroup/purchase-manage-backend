@@ -43,8 +43,8 @@ public class CloseController {
         isClosed = closedService.close(date);
         if(isClosed == -1){
             response.addHeader("accessDenied", "NO PERMISSION");
-            response.sendError(403);
-            return null;
+            response.setStatus(403);
+            return JsonResult.Fail();
         }
         if(isClosed == 1) {
             JsonResult result = JsonResult.Success();

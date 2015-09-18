@@ -42,8 +42,11 @@ public class LoginController {
                               HttpServletResponse response) throws Exception{
         if (errors.hasErrors()) {
             response.addHeader("loginStatus", "parameter error");
-            response.sendError(400);
-            return null;
+            response.setStatus(400);
+            ItemJsonResult<UserLoginResult> result = new ItemJsonResult<>(null);
+            result.setStatus(JsonResult.PARAMETERERROR);
+            result.setMessage("请求参数缺失");
+            return result;
         }
 
         //用户名，密码验证
@@ -51,10 +54,10 @@ public class LoginController {
 
         if (user == null || !StringUtils.equals(loginParam.getPassword(), user.getPassword())) {
             response.addHeader("loginStatus", "password error");
-            response.sendError(422);
+            response.setStatus(422);
             ItemJsonResult<UserLoginResult> result = new ItemJsonResult<>(null);
             result.setStatus(JsonResult.FAIL);
-            result.setMessage("username or password error");
+            result.setMessage("用户名或密码错误");
             return result;
         }
 

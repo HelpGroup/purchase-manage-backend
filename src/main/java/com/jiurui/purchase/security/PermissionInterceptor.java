@@ -19,7 +19,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
         if(!current.getRoleId().equals(Role.BRANCH)) return true;
         else {
             response.addHeader("accessDenied", "NO PERMISSION");
-            response.sendError(403);
+            response.setStatus(403);
             return false;
         }
     }

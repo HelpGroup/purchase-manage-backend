@@ -48,7 +48,7 @@ public class LoginUserInterceptor extends HandlerInterceptorAdapter {
             }
         }
         response.addHeader("loginStatus", "accessDenied");
-        response.sendError(401);
+        response.setStatus(401);
         return false;
     }
 
