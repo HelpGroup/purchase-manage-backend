@@ -49,7 +49,7 @@ public class AmountServiceImpl implements AmountService {
                 ingredientResponse.setName(ingredient.getName());
                 ingredientResponse.setCategoryId(category.getId());
                 ingredientResponse.setUnit(ingredient.getUnit());
-                int sum = amountDao.getSum(ingredient.getId(), date+" 00:00:00");
+                int sum = amountDao.getSum(ingredient.getId(), date);
                 ingredientResponse.setAmount(sum);
                 List<Amount> amounts = amountDao.getAmountsByIngredient(ingredient.getId(),date);
                 ingredientResponse.setAmounts(amounts);
@@ -137,6 +137,11 @@ public class AmountServiceImpl implements AmountService {
             if(r!=1) return null;
         }
         return categories;
+    }
+
+    @Override
+    public int getSum(Long ingredientId, String date) {
+        return amountDao.getSum(ingredientId, date);
     }
 
     private boolean isBeforeToday(String day) {

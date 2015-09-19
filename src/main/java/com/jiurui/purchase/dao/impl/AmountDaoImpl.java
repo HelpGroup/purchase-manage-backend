@@ -46,15 +46,15 @@ public class AmountDaoImpl implements AmountDao {
     @Override
     public int getTodayCount(String today, long userId) {
         return template.queryForObject(
-                "SELECT COUNT(*) FROM amount WHERE inputTime > '"+today+" 00:00:00' AND user_id = "
-                        +userId,Integer.class
+                "SELECT COUNT(*) FROM amount WHERE inputTime BETWEEN '"+today+" 00:00:00' AND '"+today+" 23:59:59'"+
+                        " AND user_id = " +userId,Integer.class
         );
     }
 
     @Override
     public int getAmountByIngredientAndUser(long ingredientId, long userId, String today) {
         return template.queryForObject(
-                "SELECT amount FROM amount WHERE inputTime > '"+today+" 00:00:00' AND user_id = "
+                "SELECT amount FROM amount WHERE inputTime BETWEEN '"+today+" 00:00:00' AND '"+today+" 23:59:59' AND user_id = "
                         +userId+" AND ingredient_id = "+ingredientId,
                 Integer.class
         );
@@ -68,14 +68,14 @@ public class AmountDaoImpl implements AmountDao {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String today = sdf.format(date.getTime()) + " 00:00:00";
-        return template.update("UPDATE amount SET amount = "+num+",inputTime = CURRENT_TIMESTAMP WHERE inputTime > '"
-                +today+" 00:00:00' AND user_id = "+userId+" AND ingredient_id = "+ingredientId);
+        return template.update("UPDATE amount SET amount = "+num+",inputTime = CURRENT_TIMESTAMP WHERE inputTime BETWEEN '"
+                +today+" 00:00:00' AND '"+today+" 23:59:59' AND user_id = "+userId+" AND ingredient_id = "+ingredientId);
     }
 
     @Override
     public int getSum(long id, String date) {
         return template.queryForObject(
-                "SELECT sum(amount) FROM amount WHERE ingredient_id = "+id+" AND inputTime > '"+date+"'",
+                "SELECT sum(amount) FROM amount WHERE ingredient_id = "+id+" AND inputTime BETWEEN '"+date+" 00:00:00' AND '"+date+" 23:59:59'",
                 Integer.class
         );
     }
