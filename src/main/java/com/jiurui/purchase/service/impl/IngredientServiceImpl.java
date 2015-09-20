@@ -25,8 +25,8 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public int create(IngredientRequest request) {
-        return ingredientDao.create(request.getName(),request.getUnit(), request.getCategoryId());
+    public int create(IngredientRequest request, long categoryId) {
+        return ingredientDao.create(request.getName(),request.getUnit(), categoryId);
     }
 
     @Override

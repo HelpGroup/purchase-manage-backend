@@ -13,7 +13,7 @@ public interface IngredientService {
 
     Ingredient selectOneByName(String name, long categoryId);
 
-    int create(IngredientRequest request);
+    int create(IngredientRequest request, long categoryId);
 
     Object selectOneById(long id);
 

@@ -44,7 +44,7 @@ public class IngredientsController {
             result.setMessage("菜品已经存在");
             return result;
         }
-        int result = ingredientService.create(request);
+        int result = ingredientService.create(request, categoryId);
         if(result==1) return JsonResult.Success();
         else {
             JsonResult r = JsonResult.Fail();
