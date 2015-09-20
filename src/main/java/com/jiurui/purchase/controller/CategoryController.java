@@ -36,20 +36,18 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/{id}/ingredients", method = RequestMethod.GET)
-    public ItemJsonResult<Category> getOne(@PathVariable long id, HttpServletResponse response)
+    public ItemJsonResult<List<Ingredient>> getOne(@PathVariable long id, HttpServletResponse response)
     throws Exception {
         Category category = categoryService.selectOne(id);
         if (category == null) {
             response.setHeader("CATEGORY_FIND_ERROR", "category not exist");
             response.setStatus(404);
-            ItemJsonResult<Category> result = new ItemJsonResult<>();
+            ItemJsonResult<List<Ingredient>> result = new ItemJsonResult<>(null);
             result.setStatus(JsonResult.FAIL);
             result.setMessage("菜品大类不存在");
             return result;
         }
-        List<Ingredient> list = ingredientService.findAllByCategoryId(id);
-        category.setIngredientList(list);
-        return new ItemJsonResult<>(category);
+        return new ItemJsonResult<>(ingredientService.findAllByCategoryId(id));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
