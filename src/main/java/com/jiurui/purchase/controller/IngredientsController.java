@@ -1,10 +1,12 @@
 package com.jiurui.purchase.controller;
 
+import com.jiurui.purchase.model.Category;
 import com.jiurui.purchase.model.Ingredient;
 import com.jiurui.purchase.request.IngredientRequest;
 import com.jiurui.purchase.request.UpdateIngredientRequest;
 import com.jiurui.purchase.response.ItemJsonResult;
 import com.jiurui.purchase.response.JsonResult;
+import com.jiurui.purchase.service.CategoryService;
 import com.jiurui.purchase.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,8 @@ public class IngredientsController {
 
     @Autowired
     private IngredientService ingredientService;
+    @Autowired
+    private CategoryService categoryService;
 
     @RequestMapping(method = RequestMethod.POST)
     public JsonResult create(@Valid @RequestBody IngredientRequest request, Errors errors,
@@ -98,8 +102,23 @@ public class IngredientsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ItemJsonResult<List<Ingredient>> find(){
-        List<Ingredient> list = ingredientService.findAll();
-        return new ItemJsonResult<>(list);
+    public ItemJsonResult<List<Ingredient>> getOne(@PathVariable long categoryId, HttpServletResponse response)
+            throws Exception {
+        Category category = categoryService.selectOne(categoryId);
+        if (category == null) {
+            response.setHeader("CATEGORY_FIND_ERROR", "category not exist");
+            response.setStatus(404);
+            ItemJsonResult<List<Ingredient>> result = new ItemJsonResult<>(null);
+            result.setStatus(JsonResult.FAIL);
+            result.setMessage("菜品大类不存在");
+            return result;
+        }
+        return new ItemJsonResult<>(ingredientService.findAllByCategoryId(categoryId));
     }
+
+//    @RequestMapping(method = RequestMethod.GET)
+//    public ItemJsonResult<List<Ingredient>> find(){
+//        List<Ingredient> list = ingredientService.findAll();
+//        return new ItemJsonResult<>(list);
+//    }
 }
