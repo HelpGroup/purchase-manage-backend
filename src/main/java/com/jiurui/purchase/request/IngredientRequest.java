@@ -10,8 +10,6 @@ public class IngredientRequest {
     private String name;
     @NotNull
     private String unit;
-    @NotNull
-    private Long categoryId;
 
     public String getName() {
         return name;
@@ -29,11 +27,4 @@ public class IngredientRequest {
         this.unit = unit;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
 }

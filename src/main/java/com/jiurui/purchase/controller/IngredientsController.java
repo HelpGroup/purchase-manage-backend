@@ -19,7 +19,7 @@ import java.util.List;
  * Created by mark on 15/9/15.
  */
 @Controller
-@RequestMapping("/ingredient")
+@RequestMapping("/category/{categoryId}/ingredient")
 @ResponseBody
 public class IngredientsController {
 
@@ -28,7 +28,7 @@ public class IngredientsController {
 
     @RequestMapping(method = RequestMethod.POST)
     public JsonResult create(@Valid @RequestBody IngredientRequest request, Errors errors,
-                             HttpServletResponse response) throws Exception {
+                             @PathVariable long categoryId, HttpServletResponse response) throws Exception {
         if (errors.hasErrors()) {
             response.addHeader("USER_CREATE_ERROR", "parameter error");
             response.setStatus(400);
@@ -36,7 +36,7 @@ public class IngredientsController {
             result.setMessage("请求参数缺失");
             return result;
         }
-        Ingredient ingredient = ingredientService.selectOneByName(request.getName(),request.getCategoryId());
+        Ingredient ingredient = ingredientService.selectOneByName(request.getName(),categoryId);
         if(ingredient != null) {
             response.setHeader("INGREDIENT_CREATE_ERROR", "ingredient exist");
             response.setStatus(422);
