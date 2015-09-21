@@ -6,8 +6,17 @@ import java.util.List;
  * Created by mark on 15/9/17.
  */
 public class AggregateResponse {
+    private boolean lock = false;
 
-    List<CategoryResponse> list;
+    private List<CategoryResponse> list;
+
+    public boolean isLock() {
+        return lock;
+    }
+
+    public void setLock(boolean lock) {
+        this.lock = lock;
+    }
 
     public List<CategoryResponse> getList() {
         return list;

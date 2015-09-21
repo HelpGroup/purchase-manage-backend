@@ -30,7 +30,7 @@ public class IngredientDaoImpl implements IngredientDao {
         try {
             ingredient = template.queryForObject(sql,rm);
         } catch (EmptyResultDataAccessException e) {
-            ingredient = null;
+            e.printStackTrace();
         }
         return ingredient;
     }
@@ -48,7 +48,7 @@ public class IngredientDaoImpl implements IngredientDao {
         try {
             ingredient = template.queryForObject(sql,rm);
         } catch (EmptyResultDataAccessException e) {
-            ingredient = null;
+            e.printStackTrace();
         }
         return ingredient;
     }

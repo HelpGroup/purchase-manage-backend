@@ -4,10 +4,7 @@ import com.jiurui.purchase.model.Category;
 import com.jiurui.purchase.model.Role;
 import com.jiurui.purchase.model.User;
 import com.jiurui.purchase.request.AmountRequest;
-import com.jiurui.purchase.response.AggregateResponse;
-import com.jiurui.purchase.response.CategoryResponse;
-import com.jiurui.purchase.response.ItemJsonResult;
-import com.jiurui.purchase.response.JsonResult;
+import com.jiurui.purchase.response.*;
 import com.jiurui.purchase.service.AmountService;
 import com.jiurui.purchase.service.ClosedService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +31,22 @@ public class AmountController {
     private ClosedService closedService;
 
     @RequestMapping(value = "/branch/{date}", method = RequestMethod.GET)
-    public ItemJsonResult<List<Category>> list(@PathVariable String date, HttpSession session){
-        ItemJsonResult<List<Category>> result = new ItemJsonResult<>();
+    public ItemJsonResult<AmountResult> list(@PathVariable String date, HttpSession session){
+        ItemJsonResult<AmountResult> result = new ItemJsonResult<>();
+        AmountResult amountResult = new AmountResult();
+
         User user = (User) session.getAttribute("user");
         List<Category> list = amountService.list(user.getId(), date);
-        result.setItem(list);
-        int isClosed = closedService.isClosed(date)+1;
-        result.setStatus(isClosed);
-        if(isClosed>1) result.setMessage("本日已经截单");
+
         if(null == list) result.setStatus(JsonResult.FAIL);
+
+        amountResult.setCategories(list);
+        int isClosed = closedService.isClosed(date)+1;
+        if(isClosed>1){
+            amountResult.setLock(true);
+        }
+
+        result.setItem(amountResult);
         return result;
     }
 
@@ -62,10 +66,11 @@ public class AmountController {
         List<CategoryResponse> list = amountService.find(date);
         AggregateResponse response = new AggregateResponse();
         response.setList(list);
-        result.setItem(response);
         int isClosed = closedService.isClosed(date)+1;
-        result.setStatus(isClosed);
-        if(isClosed>1) result.setMessage("本日已经截单");
+        if(isClosed>1){
+            response.setLock(true);
+        }
+        result.setItem(response);
         return result;
     }
 

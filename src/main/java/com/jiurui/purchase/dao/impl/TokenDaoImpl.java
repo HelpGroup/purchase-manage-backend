@@ -32,7 +32,7 @@ public class TokenDaoImpl implements TokenDao {
         try {
             token = template.queryForObject(sql, rm);
         } catch (EmptyResultDataAccessException e) {
-            token = null;
+            e.printStackTrace();
         }
         return token;
     }

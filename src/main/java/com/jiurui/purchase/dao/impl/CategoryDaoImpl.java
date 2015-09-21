@@ -52,7 +52,7 @@ public class CategoryDaoImpl implements CategoryDao {
         try {
             category = template.queryForObject(sql,rm);
         } catch (EmptyResultDataAccessException e) {
-            category = null;
+            e.printStackTrace();
         }
         return category;
     }
@@ -70,7 +70,7 @@ public class CategoryDaoImpl implements CategoryDao {
         try {
             category = template.queryForObject(sql,rm);
         } catch (EmptyResultDataAccessException e) {
-            category = null;
+            e.printStackTrace();
         }
         return category;
     }

@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public class UserDaoImpl implements UserDao {
         try {
             user = template.queryForObject(sql,rm);
         } catch (EmptyResultDataAccessException e) {
-            user = null;
+            e.printStackTrace();
         }
         return user;
     }
@@ -50,7 +49,7 @@ public class UserDaoImpl implements UserDao {
         try {
             user = template.queryForObject(sql,rm);
         } catch (EmptyResultDataAccessException e) {
-            user = null;
+            e.printStackTrace();
         }
         return user;
     }

@@ -3,6 +3,7 @@ package com.jiurui.purchase.dao.impl;
 import com.jiurui.purchase.dao.AmountDao;
 import com.jiurui.purchase.model.Amount;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -45,19 +46,33 @@ public class AmountDaoImpl implements AmountDao {
 
     @Override
     public int getTodayCount(String today, long userId) {
-        return template.queryForObject(
-                "SELECT COUNT(*) FROM amount WHERE inputTime BETWEEN '"+today+" 00:00:00' AND '"+today+" 23:59:59'"+
-                        " AND user_id = " +userId,Integer.class
-        );
+        int count = 0;
+        try {
+            count = template.queryForObject(
+                    "SELECT COUNT(*) FROM amount WHERE inputTime BETWEEN '"+today+" 00:00:00' AND '"+today+" 23:59:59'"+
+                            " AND user_id = " +userId,Integer.class
+            );
+        } catch (EmptyResultDataAccessException e){
+            e.printStackTrace();
+            return 0;
+        }
+        return count;
     }
 
     @Override
     public int getAmountByIngredientAndUser(long ingredientId, long userId, String today) {
-        return template.queryForObject(
-                "SELECT amount FROM amount WHERE inputTime BETWEEN '"+today+" 00:00:00' AND '"+today+" 23:59:59' AND user_id = "
-                        +userId+" AND ingredient_id = "+ingredientId,
-                Integer.class
-        );
+        int amount = 0;
+        try {
+            amount = template.queryForObject(
+                    "SELECT amount FROM amount WHERE inputTime BETWEEN '" + today + " 00:00:00' AND '" + today + " 23:59:59' AND user_id = "
+                            + userId + " AND ingredient_id = " + ingredientId,
+                    Integer.class
+            );
+        } catch (EmptyResultDataAccessException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return amount;
     }
 
     @Override
@@ -75,7 +90,7 @@ public class AmountDaoImpl implements AmountDao {
     @Override
     public int getSum(long id, String date) {
         return template.queryForObject(
-                "SELECT sum(amount) FROM amount WHERE ingredient_id = "+id+" AND inputTime BETWEEN '"+date+" 00:00:00' AND '"+date+" 23:59:59'",
+                "SELECT COALESCE(SUM(amount),0) FROM amount WHERE ingredient_id = "+id+" AND inputTime BETWEEN '"+date+" 00:00:00' AND '"+date+" 23:59:59'",
                 Integer.class
         );
     }
