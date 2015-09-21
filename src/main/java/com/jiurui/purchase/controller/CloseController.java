@@ -1,15 +1,15 @@
 package com.jiurui.purchase.controller;
 
+import com.jiurui.purchase.request.CloseRequest;
 import com.jiurui.purchase.response.JsonResult;
 import com.jiurui.purchase.service.ClosedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 /**
  * Created by mark on 15/9/17.
@@ -31,8 +31,15 @@ public class CloseController {
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public JsonResult change(@PathVariable String date, HttpServletResponse response) throws Exception{
+    @RequestMapping(method = RequestMethod.PATCH)
+    public JsonResult change(@PathVariable String date, @RequestBody @Valid CloseRequest request,
+                             Errors errors, HttpServletResponse response) throws Exception{
+        if (errors.hasErrors()) {
+            response.setStatus(400);
+            JsonResult result = JsonResult.ParameterError();
+            result.setMessage("请求参数有误");
+            return result;
+        }
         int isClosed = closedService.isClosed(date)+1;
         if(isClosed>1) {
             JsonResult result = new JsonResult();
@@ -44,7 +51,9 @@ public class CloseController {
         if(isClosed == -1){
             response.addHeader("accessDenied", "NO PERMISSION");
             response.setStatus(403);
-            return JsonResult.Fail();
+            JsonResult result = JsonResult.Fail();
+            result.setMessage("只能修改当天截单状态");
+            return result;
         }
         if(isClosed == 1) {
             JsonResult result = JsonResult.Success();
