@@ -25,4 +25,9 @@ public class ClosedDaoImpl implements ClosedDao {
     public int close(String now) {
         return template.update("INSERT INTO closed(close_time) VALUES ('"+now+"')");
     }
+
+    @Override
+    public int open(String today) {
+        return template.update("DELETE FROM closed WHERE close_time = '"+today+"'");
+    }
 }

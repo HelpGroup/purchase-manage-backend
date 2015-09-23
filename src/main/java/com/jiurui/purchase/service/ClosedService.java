@@ -7,4 +7,6 @@ public interface ClosedService {
     int isClosed(String date);
 
     int close(String date);
+
+    int open(String date);
 }

@@ -7,4 +7,6 @@ public interface ClosedDao {
     int isClosed(String date);
 
     int close(String now);
+
+    int open(String today);
 }

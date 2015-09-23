@@ -24,16 +24,21 @@ public class ClosedServiceImpl implements ClosedService {
 
     @Override
     public int close(String date) {
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String today = sdf.format(d);
-        try {
-            long dateLong = sdf.parse(date).getTime();
-            long todayLong = sdf.parse(today).getTime();
-            if(todayLong-dateLong != 0) return -1;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return closedDao.close(today+" 12:00:00");
+//        Date d = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        String today = sdf.format(d);
+//        try {
+//            long dateLong = sdf.parse(date).getTime();
+//            long todayLong = sdf.parse(today).getTime();
+//            if(todayLong-dateLong != 0) return -1;
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        return closedDao.close(date+" 12:00:00");
+    }
+
+    @Override
+    public int open(String date) {
+        return closedDao.open(date+" 12:00:00");
     }
 }

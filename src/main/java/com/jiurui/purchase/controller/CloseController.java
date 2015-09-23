@@ -41,23 +41,24 @@ public class CloseController {
             return result;
         }
         int isClosed = closedService.isClosed(date)+1;
-        if(isClosed>1) {
+        if(isClosed>1 && request.isLock()) {
             JsonResult result = new JsonResult();
             result.setStatus(isClosed);
             result.setMessage("本日已经截单");
             return result;
         }
-        isClosed = closedService.close(date);
-        if(isClosed == -1){
-            response.addHeader("accessDenied", "NO PERMISSION");
-            response.setStatus(403);
-            JsonResult result = JsonResult.Fail();
-            result.setMessage("只能修改当天截单状态");
-            return result;
-        }
+        isClosed = request.isLock()?closedService.close(date):closedService.open(date);
+//        暂时取消对截单日期的限制
+//        if(isClosed == -1){
+//            response.addHeader("accessDenied", "NO PERMISSION");
+//            response.setStatus(403);
+//            JsonResult result = JsonResult.Fail();
+//            result.setMessage("只能修改当天截单状态");
+//            return result;
+//        }
         if(isClosed == 1) {
             JsonResult result = JsonResult.Success();
-            result.setMessage("截单成功");
+            result.setMessage("修改截单状态成功");
             return result;
         }
         else return JsonResult.Fail();
