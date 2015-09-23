@@ -24,7 +24,7 @@ public class Finance extends Ingredient{
     }
 
     public void setNeedBuy(Integer needBuy) {
-        this.needBuy = needBuy;
+        this.needBuy = needBuy==null?0:needBuy;
     }
 
     public Integer getActualBuy() {
@@ -32,7 +32,7 @@ public class Finance extends Ingredient{
     }
 
     public void setActualBuy(Integer actualBuy) {
-        this.actualBuy = actualBuy;
+        this.actualBuy = actualBuy==null?0:actualBuy;
     }
 
     public BigDecimal getTotalCharge() {
@@ -40,6 +40,6 @@ public class Finance extends Ingredient{
     }
 
     public void setTotalCharge(BigDecimal totalCharge) {
-        this.totalCharge = totalCharge;
+        this.totalCharge = totalCharge==null?new BigDecimal(0.00):totalCharge;
     }
 }

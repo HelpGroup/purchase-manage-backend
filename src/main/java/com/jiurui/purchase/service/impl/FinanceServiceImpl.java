@@ -66,14 +66,16 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     public int save(FinanceRequest request, String date) {
+        int result = 1;
+        if(getTodayCount(date)) financeDao.deleteByDate(date);
         List<FinanceCategory> list = request.getFinanceList();
         for(FinanceCategory financeCategory : list) {
             List<Finance> finances = financeCategory.getFinances();
             for(Finance finance : finances){
-
+                result = result&financeDao.create(finance,date);
             }
         }
-        return 0;
+        return result;
     }
 
     @Override

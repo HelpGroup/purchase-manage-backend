@@ -1,6 +1,7 @@
 package com.jiurui.purchase.dao;
 
 import com.jiurui.purchase.model.Finance;
+import com.jiurui.purchase.request.FinanceRequest;
 
 import java.util.List;
 
@@ -11,4 +12,8 @@ public interface FinanceDao {
     int getTodayCount(String date);
 
     List<Finance> get(long categoryId, String date);
+
+    int deleteByDate(String date);
+
+    int create(Finance finance, String today);
 }

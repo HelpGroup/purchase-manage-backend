@@ -57,5 +57,21 @@ public class FinanceController {
         return result;
     }
 
-
+    @RequestMapping(method = RequestMethod.POST)
+    public JsonResult save(@PathVariable String date, @RequestBody FinanceRequest request,
+                           HttpSession session, HttpServletResponse response){
+        User user = (User) session.getAttribute("user");
+        if(user.getRoleId() == Role.BRANCH){
+            ItemJsonResult<List<FinanceCategory>> result = new ItemJsonResult<>(null);
+            response.addHeader("accessDenied", "NO PERMISSION");
+            response.setStatus(403);
+            result.setStatus(JsonResult.FAIL);
+            return result;
+        }
+        if(financeService.save(request,date) == 1) {
+            return JsonResult.Success();
+        } else {
+            return JsonResult.Fail();
+        }
+    }
 }
