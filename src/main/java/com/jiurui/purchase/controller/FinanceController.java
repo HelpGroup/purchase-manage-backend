@@ -43,16 +43,17 @@ public class FinanceController {
         if(closedService.isClosed(date)==0){
             financeResult.setStatus(2);
             financeResult.setMessage("本日还未截单");
+        }else {
+            boolean isCharged = financeService.getTodayCount(date);
+            List<FinanceCategory> list = financeService.find(date, isCharged);
+            if (isCharged) {
+                financeResult.setStatus(3);
+                financeResult.setMessage("本日金额已经录入完成");
+            } else {
+                financeResult.setStatus(1);
+            }
+            financeResult.setChargeList(list);
         }
-        boolean isCharged = financeService.getTodayCount(date);
-        List<FinanceCategory> list = financeService.find(date, isCharged);
-        if(isCharged) {
-            financeResult.setStatus(3);
-            financeResult.setMessage("本日金额已经录入完成");
-        }else{
-            financeResult.setStatus(1);
-        }
-        financeResult.setChargeList(list);
         result.setItem(financeResult);
         return result;
     }
