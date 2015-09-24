@@ -84,7 +84,7 @@ public class AmountDaoImpl implements AmountDao {
         long userId = amount.getUserId();
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String today = sdf.format(date.getTime()) + " 00:00:00";
+        String today = sdf.format(date.getTime());
         return template.update("UPDATE amount SET amount = "+num+",inputTime = CURRENT_TIMESTAMP WHERE inputTime BETWEEN '"
                 +today+" 00:00:00' AND '"+today+" 23:59:59' AND user_id = "+userId+" AND ingredient_id = "+ingredientId);
     }

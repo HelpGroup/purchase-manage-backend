@@ -9,13 +9,13 @@ import java.util.List;
  * Created by mark on 15/9/18.
  */
 public class FinanceRequest {
-    private List<FinanceCategory> financeList;
+    private List<FinanceCategory> chargeList;
 
-    public List<FinanceCategory> getFinanceList() {
-        return financeList;
+    public List<FinanceCategory> getChargeList() {
+        return chargeList;
     }
 
-    public void setFinanceList(List<FinanceCategory> financeList) {
-        this.financeList = financeList;
+    public void setChargeList(List<FinanceCategory> chargeList) {
+        this.chargeList = chargeList;
     }
 }

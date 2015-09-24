@@ -15,21 +15,21 @@ import javax.validation.Valid;
  * Created by mark on 15/9/17.
  */
 @Controller
-@RequestMapping("/status/admin/{date}")
+@RequestMapping("/amount/admin/{date}")
 @ResponseBody
 public class CloseController {
 
     @Autowired
     private ClosedService closedService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public JsonResult get(@PathVariable String date){
-        JsonResult result = new JsonResult();
-        int isClosed = closedService.isClosed(date)+1;
-        result.setStatus(isClosed);
-        if(isClosed>1) result.setMessage("本日已经截单");
-        return result;
-    }
+//    @RequestMapping(method = RequestMethod.GET)
+//    public JsonResult get(@PathVariable String date){
+//        JsonResult result = new JsonResult();
+//        int isClosed = closedService.isClosed(date)+1;
+//        result.setStatus(isClosed);
+//        if(isClosed>1) result.setMessage("本日已经截单");
+//        return result;
+//    }
 
     @RequestMapping(method = RequestMethod.PATCH)
     public JsonResult change(@PathVariable String date, @RequestBody @Valid CloseRequest request,

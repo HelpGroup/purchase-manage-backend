@@ -102,18 +102,18 @@ public class AmountController {
     }
 
     @RequestMapping(value = "/{date}/csv", method = RequestMethod.GET)
-    public void csvDownLoad(@PathVariable String date, HttpServletResponse httpServletResponse) throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        String fileName = "purchase-amount-";
-        fileName += dateFormat.format(new Date());
-        fileName += ".csv";
+    public void csvDownLoad(@PathVariable String date, HttpServletResponse response) throws Exception {
+        String fileName = date+"采购清单.csv";
 
-        httpServletResponse.setContentType("application/octet-stream");
-        httpServletResponse.addHeader("Content-Disposition", "attachment; filename=" + fileName);
         BufferedInputStream bis = null;
         BufferedOutputStream out = null;
         String path = System.getProperty("java.io.tmpdir") + "\\tmp.csv";
         File file = new File(path);
+
+        response.setContentType("application/octet-stream;");
+        response.addHeader("Content-Disposition", "attachment; filename=" + new String(fileName.getBytes(),"iso-8859-1"));
+        response.addHeader("Content-Length",""+file.length());
+
         FileWriterWithEncoding fwwe =new FileWriterWithEncoding(file,"gbk");
         BufferedWriter bw = new BufferedWriter(fwwe);
 
@@ -141,7 +141,7 @@ public class AmountController {
         fwwe.close();
         try {
             bis = new BufferedInputStream(new FileInputStream(file));
-            out = new BufferedOutputStream(httpServletResponse.getOutputStream());
+            out = new BufferedOutputStream(response.getOutputStream());
             byte[] buff = new byte[2048];
             while (true) {
                 int bytesRead;

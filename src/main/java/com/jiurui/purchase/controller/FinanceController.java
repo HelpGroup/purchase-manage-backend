@@ -60,7 +60,7 @@ public class FinanceController {
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.PATCH)
     public JsonResult save(@PathVariable String date, @RequestBody FinanceRequest request,
                            HttpSession session, HttpServletResponse response){
         User user = (User) session.getAttribute("user");
@@ -80,13 +80,10 @@ public class FinanceController {
 
     @RequestMapping(value = "/csv", method = RequestMethod.GET)
     public void csvDownLoad(@PathVariable String date, HttpServletResponse httpServletResponse) throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        String fileName = "purchase-charge-";
-        fileName += dateFormat.format(new Date());
-        fileName += ".csv";
+        String fileName = date+"采购金额.csv";
 
         httpServletResponse.setContentType("application/octet-stream");
-        httpServletResponse.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+        httpServletResponse.addHeader("Content-Disposition", "attachment; filename=" + new String(fileName.getBytes(),"iso-8859-1"));
         BufferedInputStream bis = null;
         BufferedOutputStream out = null;
         String path = System.getProperty("java.io.tmpdir") + "\\tmp.csv";
