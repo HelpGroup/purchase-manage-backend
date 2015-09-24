@@ -81,7 +81,7 @@ public class AmountController {
         return result;
     }
 
-    @RequestMapping(value = "/branch/today", method = RequestMethod.POST)
+    @RequestMapping(value = "/branch/today", method = RequestMethod.PUT)
     public JsonResult input(@RequestBody AmountRequest request, HttpSession session,
                             HttpServletResponse response) throws Exception{
         Date date = new Date();
