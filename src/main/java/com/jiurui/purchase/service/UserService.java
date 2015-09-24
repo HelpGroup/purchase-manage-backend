@@ -20,4 +20,6 @@ public interface UserService {
     int deleteUser(long id);
 
     int changePassword(long id, String password);
+
+    List<User> findBranches();
 }

@@ -54,4 +54,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(password);
         return userDao.updateById(user);
     }
+
+    @Override
+    public List<User> findBranches() {
+        return userDao.findBranches();
+    }
 }

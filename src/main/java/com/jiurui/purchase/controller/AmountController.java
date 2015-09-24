@@ -7,6 +7,7 @@ import com.jiurui.purchase.request.AmountRequest;
 import com.jiurui.purchase.response.*;
 import com.jiurui.purchase.service.AmountService;
 import com.jiurui.purchase.service.ClosedService;
+import com.jiurui.purchase.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,8 @@ public class AmountController {
     private AmountService amountService;
     @Autowired
     private ClosedService closedService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/branch/{date}", method = RequestMethod.GET)
     public ItemJsonResult<AmountResult> list(@PathVariable String date, HttpSession session){
@@ -66,6 +69,7 @@ public class AmountController {
         List<CategoryResponse> list = amountService.find(date);
         AggregateResponse response = new AggregateResponse();
         response.setList(list);
+        response.setUsers(userService.findBranches());
         int isClosed = closedService.isClosed(date)+1;
         if(isClosed>1){
             response.setLock(true);

@@ -83,4 +83,20 @@ public class UserDaoImpl implements UserDao {
         String sql = "UPDATE user SET password = '"+password+"' WHERE id = "+id;
         return template.update(sql);
     }
+
+    @Override
+    public List<User> findBranches() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM user WHERE role_id = 2 ORDER BY id ASC";
+        List<Map<String, Object>> list = template.queryForList(sql);
+        for(Map element : list) {
+            User user = new User();
+            user.setId((Long)element.get("id"));
+            user.setUsername((String)element.get("username"));
+            user.setPassword((String)element.get("password"));
+            user.setRoleId((int)element.get("role_id"));
+            users.add(user);
+        }
+        return users;
+    }
 }

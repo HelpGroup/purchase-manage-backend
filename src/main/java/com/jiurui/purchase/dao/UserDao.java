@@ -19,4 +19,6 @@ public interface UserDao {
     int deleteUserById(long id);
 
     int updateById(User user);
+
+    List<User> findBranches();
 }
