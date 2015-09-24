@@ -1,5 +1,6 @@
 package com.jiurui.purchase.controller;
 
+import com.jiurui.purchase.model.Amount;
 import com.jiurui.purchase.model.Category;
 import com.jiurui.purchase.model.Role;
 import com.jiurui.purchase.model.User;
@@ -8,12 +9,14 @@ import com.jiurui.purchase.response.*;
 import com.jiurui.purchase.service.AmountService;
 import com.jiurui.purchase.service.ClosedService;
 import com.jiurui.purchase.service.UserService;
+import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -96,6 +99,78 @@ public class AmountController {
         } catch (Exception e) {
             return JsonResult.Fail();
         }
+    }
+
+    @RequestMapping(value = "/{date}/csv", method = RequestMethod.GET)
+    public void csvDownLoad(@PathVariable String date, HttpServletResponse httpServletResponse) throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String fileName = "test-";
+        fileName += dateFormat.format(new Date());
+        fileName += ".csv";
+
+        httpServletResponse.setContentType("application/octet-stream");
+        httpServletResponse.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+        BufferedInputStream bis = null;
+        BufferedOutputStream out = null;
+        String path = System.getProperty("java.io.tmpdir") + "\\tmp.csv";
+        File file = new File(path);
+        FileWriterWithEncoding fwwe =new FileWriterWithEncoding(file,"UTF-8");
+        BufferedWriter bw = new BufferedWriter(fwwe);
+
+        List<CategoryResponse> list = amountService.find(date);
+        bw.write("分类\t\t菜品\t\t单位\t\t总数量\t\t");
+        List<User> users = userService.findBranches();
+        for(User user : users){
+            bw.write(user.getUsername()+"\t\t");
+        }
+        bw.write("\n\n");
+        for(CategoryResponse categoryResponse : list){
+            bw.write(categoryResponse.getName());
+            List<IngredientResponse> ingredientList = categoryResponse.getIngredientList();
+            for(IngredientResponse ingredientResponse : ingredientList){
+                bw.write("\t\t"+ingredientResponse.getName()+"\t\t"+ingredientResponse.getUnit()+"\t\t"+ingredientResponse.getAmount()+"\t\t");
+                List<Amount> amounts = ingredientResponse.getAmounts();
+                for(Amount amount : amounts){
+                    bw.write(amount.getAmount()+"\t\t");
+                }
+                bw.write("\n");
+            }
+            bw.write("\n");
+        }
+
+        bw.close();
+        fwwe.close();
+        try {
+            bis = new BufferedInputStream(new FileInputStream(file));
+            out = new BufferedOutputStream(httpServletResponse.getOutputStream());
+            byte[] buff = new byte[2048];
+            while (true) {
+                int bytesRead;
+                if (-1 == (bytesRead = bis.read(buff, 0, buff.length))){
+                    break;
+                }
+                out.write(buff, 0, bytesRead);
+            }
+            file.deleteOnExit();
+        }
+        catch (IOException e) {
+            throw e;
+        }
+        finally{
+            try {
+                if(bis != null){
+                    bis.close();
+                }
+                if(out != null){
+                    out.flush();
+                    out.close();
+                }
+            }
+            catch (IOException e) {
+                throw e;
+            }
+        }
+
     }
 
 }
