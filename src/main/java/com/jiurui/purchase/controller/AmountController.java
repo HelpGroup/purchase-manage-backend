@@ -81,14 +81,14 @@ public class AmountController {
         return result;
     }
 
-    @RequestMapping(value = "/branch/today", method = RequestMethod.PUT)
+    @RequestMapping(value = "/branch/{date}", method = RequestMethod.PUT)
     public JsonResult input(@RequestBody AmountRequest request, HttpSession session,
-                            HttpServletResponse response) throws Exception{
-        Date date = new Date();
+                            @PathVariable String date, HttpServletResponse response) throws Exception{
+        Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String today = sdf.format(date);
+        String today = sdf.format(d);
         int isClosed = closedService.isClosed(today)+1;
-        if(isClosed ==2) {
+        if(isClosed ==2 || !date.equals(today)) {
             response.addHeader("accessDenied", "NO PERMISSION");
             response.setStatus(403);
             return JsonResult.Fail();
