@@ -35,6 +35,7 @@
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/login"/>
             <mvc:exclude-mapping path="/logout"/>
+            <mvc:exclude-mapping path="/amount/*/csv"/>
             <bean id="loginUserInterceptor" class="com.jiurui.purchase.security.LoginUserInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
@@ -45,6 +46,7 @@
             <mvc:exclude-mapping path="/amount/branch/**" />
             <mvc:exclude-mapping path="/login"/>
             <mvc:exclude-mapping path="/logout"/>
+            <mvc:exclude-mapping path="/amount/*/csv"/>
             <bean id="PermissionInterceptor" class="com.jiurui.purchase.security.PermissionInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

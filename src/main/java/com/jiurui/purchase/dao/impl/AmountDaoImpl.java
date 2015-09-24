@@ -24,15 +24,17 @@ public class AmountDaoImpl implements AmountDao {
         String beginTime = date+" 00:00:00";
         String endTime = date+" 23:59:59";
         List<Amount> amounts = new ArrayList<>();
-        String sql = "SELECT * FROM amount WHERE ingredient_id = "+ingredientId+" AND inputTime BETWEEN '"
-                +beginTime+"' AND '"+endTime+"' ORDER BY user_id ASC ";
+        String sql = "SELECT * from user LEFT JOIN " +
+                "(SELECT * FROM amount WHERE ingredient_id = "+ingredientId+" AND inputTime BETWEEN '"
+                +beginTime+"' AND '"+endTime+"') AS a ON a.user_id = user.id " +
+                "WHERE role_id != 1 ORDER BY user.id ASC ";
         List<Map<String, Object>> list = template.queryForList(sql);
         for(Map<String, Object> element : list){
             Amount amount = new Amount();
             amount.setId((Long)element.get("id"));
             amount.setIngredientId((Long)element.get("ingredient_id"));
             amount.setUserId((Long)element.get("user_id"));
-            amount.setAmount((int)element.get("amount"));
+            amount.setAmount(element.get("amount")==null?0:(int)element.get("amount"));
             amounts.add(amount);
         }
         return amounts;

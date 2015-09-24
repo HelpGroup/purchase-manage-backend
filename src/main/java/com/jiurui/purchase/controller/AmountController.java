@@ -103,8 +103,8 @@ public class AmountController {
 
     @RequestMapping(value = "/{date}/csv", method = RequestMethod.GET)
     public void csvDownLoad(@PathVariable String date, HttpServletResponse httpServletResponse) throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        String fileName = "test-";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String fileName = "purchase";
         fileName += dateFormat.format(new Date());
         fileName += ".csv";
 
@@ -114,28 +114,27 @@ public class AmountController {
         BufferedOutputStream out = null;
         String path = System.getProperty("java.io.tmpdir") + "\\tmp.csv";
         File file = new File(path);
-        FileWriterWithEncoding fwwe =new FileWriterWithEncoding(file,"UTF-8");
+        FileWriterWithEncoding fwwe =new FileWriterWithEncoding(file,"gbk");
         BufferedWriter bw = new BufferedWriter(fwwe);
 
         List<CategoryResponse> list = amountService.find(date);
-        bw.write("分类\t\t菜品\t\t单位\t\t总数量\t\t");
+        bw.write("分类,菜品,单位,总数量,");
         List<User> users = userService.findBranches();
         for(User user : users){
-            bw.write(user.getUsername()+"\t\t");
+            bw.write(user.getUsername()+",");
         }
         bw.write("\n\n");
         for(CategoryResponse categoryResponse : list){
             bw.write(categoryResponse.getName());
             List<IngredientResponse> ingredientList = categoryResponse.getIngredientList();
             for(IngredientResponse ingredientResponse : ingredientList){
-                bw.write("\t\t"+ingredientResponse.getName()+"\t\t"+ingredientResponse.getUnit()+"\t\t"+ingredientResponse.getAmount()+"\t\t");
+                bw.write(","+ingredientResponse.getName()+","+ingredientResponse.getUnit()+","+ingredientResponse.getAmount()+",");
                 List<Amount> amounts = ingredientResponse.getAmounts();
                 for(Amount amount : amounts){
-                    bw.write(amount.getAmount()+"\t\t");
+                    bw.write(amount.getAmount()+",");
                 }
                 bw.write("\n");
             }
-            bw.write("\n");
         }
 
         bw.close();
