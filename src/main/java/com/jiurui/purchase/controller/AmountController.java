@@ -104,7 +104,7 @@ public class AmountController {
     @RequestMapping(value = "/{date}/csv", method = RequestMethod.GET)
     public void csvDownLoad(@PathVariable String date, HttpServletResponse httpServletResponse) throws Exception {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        String fileName = "purchase";
+        String fileName = "purchase-amount-";
         fileName += dateFormat.format(new Date());
         fileName += ".csv";
 
@@ -123,7 +123,7 @@ public class AmountController {
         for(User user : users){
             bw.write(user.getUsername()+",");
         }
-        bw.write("\n\n");
+        bw.write("\n");
         for(CategoryResponse categoryResponse : list){
             bw.write(categoryResponse.getName());
             List<IngredientResponse> ingredientList = categoryResponse.getIngredientList();

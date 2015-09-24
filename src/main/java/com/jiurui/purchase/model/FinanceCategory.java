@@ -1,7 +1,5 @@
 package com.jiurui.purchase.model;
 
-import com.jiurui.purchase.model.Finance;
-
 import java.util.List;
 
 /**
