@@ -29,37 +29,35 @@ public class FinanceDaoImpl implements FinanceDao {
     }
 
     @Override
-    public List<Finance> get(long categoryId, String today) {
-        List<Finance> finances = new ArrayList<>();
-        String sql = "SELECT * FROM ingredient a LEFT JOIN " +
-                "(SELECT id AS finance_id, ingredient_id, need_buy, actual_buy,total_charge FROM finance " +
-                "WHERE buy_time BETWEEN '"+today+" 00:00:00' AND '"+today+" 23:59:59') b " +
-                "ON a.id = b.ingredient_id WHERE category_id = "+categoryId;
-        List<Map<String, Object>> list = template.queryForList(sql);
-        for(Map element : list) {
-            Finance finance = new Finance();
-            finance.setId((Long)element.get("id"));
-            finance.setName((String)element.get("name"));
-            finance.setUnit((String)element.get("unit"));
-            finance.setCategoryId((Long)element.get("category_id"));
-            finance.setFinanceId((Long)element.get("finance_id"));
-            finance.setNeedBuy((Integer)element.get("need_buy"));
-            finance.setActualBuy((Integer)element.get("actual_buy"));
-            finance.setTotalCharge((BigDecimal)element.get("total_charge"));
-            finances.add(finance);
-        }
-        return finances;
-    }
-
-    @Override
     public int deleteByDate(String date) {
         return template.update("DELETE FROM finance WHERE buy_time BETWEEN '"+date+" 00:00:00' AND '"+date+" 23:59:59'");
     }
 
     @Override
     public int create(Finance finance, String today) {
-        return template.update("INSERT INTO finance(ingredient_id,need_buy,actual_buy,total_charge,buy_time) "
-                +"VALUES ("+finance.getId()+","+finance.getNeedBuy()+","+ finance.getActualBuy()+","
-                + finance.getTotalCharge()+",'"+today+" ')");
+        return template.update("INSERT INTO finance(amount_id,actual_buy,total_charge,buy_time) "
+                +"VALUES ("+finance.getId()+","+finance.getActualBuy()+","
+                + finance.getTotalCharge()+",'"+today+" 12:00:00')");
+    }
+
+    @Override
+    public List<Finance> getToday(long id, String today) {
+        List<Finance> finances = new ArrayList<>();
+        String sql = "select a.* from user left join ( select amount.*,finance.actual_buy,finance.total_charge " +
+                "from amount left join finance on finance.amount_id = amount.id where ingredient_id = "+ id +
+                " and inputTime between '"+today+" 00:00:00' and '"+today+" 23:59:59' )  as a " +
+                "on a.user_id = user.id where role_id != 1 order by user.id asc";
+        List<Map<String, Object>> list = template.queryForList(sql);
+        for(Map element : list) {
+            Finance finance = new Finance();
+            finance.setId((Long)element.get("id"));
+            finance.setIngredientId((Long) element.get("ingredient_id"));
+            finance.setUserId((Long) element.get("user_id"));
+            finance.setAmount((Integer) element.get("amount"));
+            finance.setActualBuy((Integer) element.get("actual_buy"));
+            finance.setTotalCharge((BigDecimal) element.get("total_charge"));
+            finances.add(finance);
+        }
+        return finances;
     }
 }

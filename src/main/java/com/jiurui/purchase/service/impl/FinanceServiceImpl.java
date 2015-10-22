@@ -1,12 +1,10 @@
 package com.jiurui.purchase.service.impl;
 
+import com.jiurui.purchase.dao.AmountDao;
 import com.jiurui.purchase.dao.FinanceDao;
-import com.jiurui.purchase.model.Category;
-import com.jiurui.purchase.model.Finance;
-import com.jiurui.purchase.model.Ingredient;
-import com.jiurui.purchase.model.FinanceCategory;
+import com.jiurui.purchase.model.*;
 import com.jiurui.purchase.request.FinanceRequest;
-import com.jiurui.purchase.service.AmountService;
+import com.jiurui.purchase.response.CategoryResponse;
 import com.jiurui.purchase.service.CategoryService;
 import com.jiurui.purchase.service.FinanceService;
 import com.jiurui.purchase.service.IngredientService;
@@ -30,35 +28,28 @@ public class FinanceServiceImpl implements FinanceService {
     @Autowired
     private IngredientService ingredientService;
     @Autowired
-    private AmountService amountService;
+    private AmountDao amountDao;
 
     @Override
-    public List<FinanceCategory> find(String date, boolean isCharged) {
+    public List<FinanceCategory> find(String date) {
         List<Category> categories = categoryService.findAll();
         List<FinanceCategory> results = new ArrayList<>();
         for(Category category : categories){
             FinanceCategory result = new FinanceCategory();
             result.setCategoryId(category.getId());
             result.setCategoryName(category.getName());
-            List<Finance> finances;
-            if(isCharged){
-                finances = financeDao.get(category.getId(), date);
-            } else {
-                finances = new ArrayList<>();
-                List<Ingredient> ingredients = ingredientService.findAllByCategoryId(category.getId());
-                for (Ingredient ingredient : ingredients) {
-                    Finance finance = new Finance();
-                    finance.setId(ingredient.getId());
-                    finance.setName(ingredient.getName());
-                    finance.setCategoryId(category.getId());
-                    finance.setUnit(ingredient.getUnit());
-                    finance.setNeedBuy(amountService.getSum(ingredient.getId(), date));
-                    finance.setActualBuy(0);
-                    finance.setTotalCharge(new BigDecimal(0.00));
-                    finances.add(finance);
-                }
+            List<Ingredient> ingredients = ingredientService.findAllByCategoryId(category.getId());
+            List<FinanceIngredient> financeIngredients = new ArrayList<>();
+            for (Ingredient ingredient : ingredients) {
+                FinanceIngredient financeIngredient = new FinanceIngredient();
+                financeIngredient.setId(ingredient.getId());
+                financeIngredient.setName(ingredient.getName());
+                financeIngredient.setCategoryId(category.getId());
+                financeIngredient.setUnit(ingredient.getUnit());
+                financeIngredients.add(financeIngredient);
+                financeIngredient.setFinances(financeDao.getToday(ingredient.getId(), date));
             }
-            result.setFinances(finances);
+            result.setIngredients(financeIngredients);
             results.add(result);
         }
         return results;
@@ -70,9 +61,12 @@ public class FinanceServiceImpl implements FinanceService {
         if(getTodayCount(date)) financeDao.deleteByDate(date);
         List<FinanceCategory> list = request.getChargeList();
         for(FinanceCategory financeCategory : list) {
-            List<Finance> finances = financeCategory.getFinances();
-            for(Finance finance : finances){
-                result = result&financeDao.create(finance,date);
+            List<FinanceIngredient> ingredients = financeCategory.getIngredients();
+            for(FinanceIngredient financeIngredient : ingredients){
+                List<Finance> finances = financeIngredient.getFinances();
+                for (Finance finance : finances ){
+                    result = result&financeDao.create(finance,date);
+                }
             }
         }
         return result;

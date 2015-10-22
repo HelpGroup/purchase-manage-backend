@@ -8,7 +8,7 @@ import java.util.List;
 public class FinanceCategory {
     private Long categoryId;
     private String categoryName;
-    private List<Finance> finances;
+    private List<FinanceIngredient> ingredients;
 
     public Long getCategoryId() {
         return categoryId;
@@ -26,11 +26,11 @@ public class FinanceCategory {
         this.categoryName = categoryName;
     }
 
-    public List<Finance> getFinances() {
-        return finances;
+    public List<FinanceIngredient> getIngredients() {
+        return ingredients;
     }
 
-    public void setFinances(List<Finance> finances) {
-        this.finances = finances;
+    public void setIngredients(List<FinanceIngredient> ingredients) {
+        this.ingredients = ingredients;
     }
 }

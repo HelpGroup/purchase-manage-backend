@@ -5,6 +5,7 @@ import com.jiurui.purchase.request.FinanceRequest;
 import com.jiurui.purchase.response.*;
 import com.jiurui.purchase.service.ClosedService;
 import com.jiurui.purchase.service.FinanceService;
+import com.jiurui.purchase.service.UserService;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,8 @@ public class FinanceController {
     private FinanceService financeService;
     @Autowired
     private ClosedService closedService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
     public ItemJsonResult<FinanceResult> charge(@PathVariable String date, HttpSession session,
@@ -47,7 +50,7 @@ public class FinanceController {
             financeResult.setMessage("本日还未截单");
         }else {
             boolean isCharged = financeService.getTodayCount(date);
-            List<FinanceCategory> list = financeService.find(date, isCharged);
+            List<FinanceCategory> list = financeService.find(date);
             if (isCharged) {
                 financeResult.setStatus(3);
                 financeResult.setMessage("本日金额已经录入完成");
@@ -55,6 +58,7 @@ public class FinanceController {
                 financeResult.setStatus(1);
             }
             financeResult.setChargeList(list);
+            financeResult.setUsers(userService.findBranches());
         }
         result.setItem(financeResult);
         return result;
@@ -91,16 +95,26 @@ public class FinanceController {
         FileWriterWithEncoding fwwe =new FileWriterWithEncoding(file,"gbk");
         BufferedWriter bw = new BufferedWriter(fwwe);
 
-        boolean isCharged = financeService.getTodayCount(date);
-        List<FinanceCategory> list = financeService.find(date, isCharged);
-        bw.write("分类,菜品,单位,需求数量,实际采购量,采购总价");
+        List<FinanceCategory> list = financeService.find(date);
+        List<User> users = userService.findBranches();
+        bw.write(",,");
+        for (User user : users) {
+            bw.write(user.getUsername()+",,,");
+        }
+        bw.write("\n大类,菜品,单位,");
+        for (User user : users) {
+            bw.write("需求数量,实际采购量,采购总价,");
+        }
         bw.write("\n");
         for(FinanceCategory financeCategory : list){
             bw.write(financeCategory.getCategoryName());
-            List<Finance> finances = financeCategory.getFinances();
-            for(Finance finance : finances){
-                bw.write(","+finance.getName()+","+finance.getUnit()+","+finance.getNeedBuy()+","
-                        +finance.getActualBuy()+","+finance.getTotalCharge()+",\n");
+            List<FinanceIngredient> financeIngredients = financeCategory.getIngredients();
+            for(FinanceIngredient financeIngredient : financeIngredients){
+                bw.write(","+financeIngredient.getName()+","+financeIngredient.getUnit());
+                for (Finance finance : financeIngredient.getFinances()) {
+                    bw.write(","+finance.getAmount()+","+finance.getActualBuy()+","+finance.getTotalCharge());
+                }
+                bw.write(",\n");
             }
         }
 

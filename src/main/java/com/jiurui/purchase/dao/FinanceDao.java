@@ -11,9 +11,9 @@ import java.util.List;
 public interface FinanceDao {
     int getTodayCount(String date);
 
-    List<Finance> get(long categoryId, String date);
-
     int deleteByDate(String date);
 
     int create(Finance finance, String today);
+
+    List<Finance> getToday(long id, String today);
 }

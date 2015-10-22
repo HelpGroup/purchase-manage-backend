@@ -1,6 +1,7 @@
 package com.jiurui.purchase.response;
 
 import com.jiurui.purchase.model.FinanceCategory;
+import com.jiurui.purchase.model.User;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class FinanceResult {
     private int status;
     private String message;
     private List<FinanceCategory> chargeList;
+    private List<User> users;
 
     public int getStatus() {
         return status;
@@ -34,5 +36,13 @@ public class FinanceResult {
 
     public void setChargeList(List<FinanceCategory> chargeList) {
         this.chargeList = chargeList;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

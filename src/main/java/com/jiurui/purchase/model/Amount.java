@@ -7,7 +7,7 @@ public class Amount {
     private Long id;
     private Long ingredientId;
     private Long userId;
-    private int amount;
+    private Integer amount;
 
     public Long getId() {
         return id;
@@ -33,11 +33,11 @@ public class Amount {
         this.userId = userId;
     }
 
-    public int getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setAmount(Integer amount) {
+        this.amount = amount == null ? 0 : amount;
     }
 }

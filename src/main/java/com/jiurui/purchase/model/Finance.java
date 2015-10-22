@@ -1,13 +1,13 @@
 package com.jiurui.purchase.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by mark on 15/9/18.
  */
-public class Finance extends Ingredient{
+public class Finance extends Amount{
     private Long financeId;
-    private Integer needBuy;
     private Integer actualBuy;
     private BigDecimal totalCharge;
 
@@ -17,14 +17,6 @@ public class Finance extends Ingredient{
 
     public void setFinanceId(Long financeId) {
         this.financeId = financeId;
-    }
-
-    public Integer getNeedBuy() {
-        return needBuy;
-    }
-
-    public void setNeedBuy(Integer needBuy) {
-        this.needBuy = needBuy==null?0:needBuy;
     }
 
     public Integer getActualBuy() {
