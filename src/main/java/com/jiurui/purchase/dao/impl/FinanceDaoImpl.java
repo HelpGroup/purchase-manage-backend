@@ -43,7 +43,7 @@ public class FinanceDaoImpl implements FinanceDao {
     @Override
     public List<Finance> getToday(long id, String today) {
         List<Finance> finances = new ArrayList<>();
-        String sql = "select a.* from user left join ( select amount.*,finance.actual_buy,finance.total_charge " +
+        String sql = "select a.* from user right join ( select amount.*,finance.actual_buy,finance.total_charge " +
                 "from amount left join finance on finance.amount_id = amount.id where ingredient_id = "+ id +
                 " and inputTime between '"+today+" 00:00:00' and '"+today+" 23:59:59' )  as a " +
                 "on a.user_id = user.id where role_id != 1 order by user.id asc";
