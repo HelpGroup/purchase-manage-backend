@@ -21,4 +21,6 @@ public interface UserDao {
     int updateById(User user);
 
     List<User> findBranches();
+
+    List<User> findBranchesWithAmount(String today);
 }

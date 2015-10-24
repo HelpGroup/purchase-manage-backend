@@ -59,4 +59,9 @@ public class UserServiceImpl implements UserService {
     public List<User> findBranches() {
         return userDao.findBranches();
     }
+
+    @Override
+    public List<User> findBranchesWithAmount(String today) {
+        return userDao.findBranchesWithAmount(today);
+    }
 }

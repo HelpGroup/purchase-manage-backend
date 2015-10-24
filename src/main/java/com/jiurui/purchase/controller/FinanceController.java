@@ -58,7 +58,7 @@ public class FinanceController {
                 financeResult.setStatus(1);
             }
             financeResult.setChargeList(list);
-            financeResult.setUsers(userService.findBranches());
+            financeResult.setUsers(userService.findBranchesWithAmount(date));
         }
         result.setItem(financeResult);
         return result;

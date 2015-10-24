@@ -22,4 +22,6 @@ public interface UserService {
     int changePassword(long id, String password);
 
     List<User> findBranches();
+
+    List<User> findBranchesWithAmount(String today);
 }
