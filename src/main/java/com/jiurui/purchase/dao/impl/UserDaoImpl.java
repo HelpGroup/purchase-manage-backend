@@ -103,7 +103,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> findBranchesWithAmount(String today) {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM user left join amount on user.id=amount.user_id WHERE role_id = 2 and inputTime between '"+today+" 00:00:00' and '"+today+" 23:59:59' group by user.id ORDER BY user.id ASC";
+        String sql = "SELECT user.* FROM user left join amount on user.id=amount.user_id WHERE role_id = 2 and inputTime between '"+today+" 00:00:00' and '"+today+" 23:59:59' group by user.id ORDER BY user.id ASC";
         List<Map<String, Object>> list = template.queryForList(sql);
         for(Map element : list) {
             User user = new User();
